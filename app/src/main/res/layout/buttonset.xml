@@ -33,7 +33,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="Remove View from Fragment"
+        android:text="Rm View from Fragment"
         android:onClick="buttonRemoveFragmentView"
         />
     <Button

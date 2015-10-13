@@ -6,8 +6,7 @@ import android.os.Bundle;
 public class ActivityPrintStates extends Activity
 {
   //<editor-fold desc="FIELDS">
-  private final String LOGTAG = "FLD APS";
-  private final Bhlogger bh_aps = new Bhlogger(LOGTAG);
+  private final Bhlogger bh = new Bhlogger(MainActivity.LOGTAG_APPLC);
   //</editor-fold>
   //<editor-fold desc="OVERRIDDEN METHODS">
   // Called at the start of the full lifetime.
@@ -100,8 +99,8 @@ public class ActivityPrintStates extends Activity
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-    String s = String.format("%s%s",MainActivity.SEP_APS, label);
-    bh_aps.log(s);
+    String s = String.format("%s %s",Trace.SEP_APS, label);
+    bh.log(s);
   }
   //</editor-fold>
 }

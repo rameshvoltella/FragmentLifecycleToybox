@@ -17,8 +17,8 @@ public class FldTextView extends TextView
 		super(context);
 		setId(generateViewId());
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace("FLD VGP", Trace.SEP_VEW, info);
-		trace.log("FldTextView Constructor");
+		trace = new Trace("FLD VEW", Trace.SEP_VEW, info);
+		trace.log("FldTextView(NEW)");
 	}
 	//</editor-fold>
 	//<editor-fold desc="OVERRIDES">

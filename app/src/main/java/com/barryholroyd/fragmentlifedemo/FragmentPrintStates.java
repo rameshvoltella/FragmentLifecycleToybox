@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 public class FragmentPrintStates extends Fragment
 {
   //<editor-fold desc="FIELDS">
-  private final Bhlogger bh_fps = new Bhlogger("FLD FPS");
+  private final Bhlogger bh = new Bhlogger(MainActivity.LOGTAG_FRAGMENTLC);
   //</editor-fold>
   //<editor-fold desc="OVERRIDES">
   // Called when the fragment's activity has been created and this fragment's view hierarchy instantiated.
@@ -246,11 +246,11 @@ public class FragmentPrintStates extends Fragment
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   protected void fpsSetLogtag(String s) {
-    bh_fps.setLogtag(s);
+    bh.setLogtag(s);
   }
   private void runme(String label) {
-    String s = String.format("%sIN: %s",MainActivity.SEP_FRAG, label);
-    bh_fps.log(s);
+    String s = String.format("%s %s",Trace.SEP_FRG, label);
+    bh.log(s);
   }
   //</editor-fold>
 }

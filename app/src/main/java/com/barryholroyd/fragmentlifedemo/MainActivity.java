@@ -6,16 +6,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
-	static public Bhlogger bh = new Bhlogger("FLD APP");
 	private Trace trace = null;
 	private FragmentManager fm = getFragmentManager();
 
 	static final private String FRAGTAG1 = "FragTag1";
 	static final private String FRAGTAG2 = "FragTag2";
+
+	static final public String LOGTAG_APP           = "FLD APP        ";
+	static final public String LOGTAG_APPLC         = "FLD APP LC     ";
+	static final public String LOGTAG_FRAGMENTLC    = "FLD FRAGMENT LC";
+	static final public String LOGTAG_FRAGMENT      = "FLD FRAGMENT   ";
+	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP ";
+
+	static public Bhlogger bh = new Bhlogger(LOGTAG_APP);
+
 
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW,
@@ -34,9 +43,9 @@ public class MainActivity extends ActivityPrintStates
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace("FLD APP", Trace.SEP_APP, info);
-		trace.log("onCreate", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
-		trace.log("onCreate", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
+		trace = new Trace(LOGTAG_APP, Trace.SEP_APP, info);
+		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
+		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 	}
 	//</editor-fold>
@@ -156,11 +165,6 @@ public class MainActivity extends ActivityPrintStates
 		fld_ll.fldLlTrace();
 	}
 	//</editor-fold>
-
-	private void tracesep(String label) {
-		bh.log("-----------------------------\n");
-		trace.log(label);
-	}
 	//<editor-fold desc="SUPPORT METHODS">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
 		tracesep(label);
@@ -203,22 +207,25 @@ public class MainActivity extends ActivityPrintStates
 
 		// Get the fragment corresponding to the button's container.
 		Button button = (Button) v;
-		FldLinearLayout fld_ll = (FldLinearLayout) button.getParent();
-		int container_id = fld_ll.getId();
+		LinearLayout ll = (LinearLayout) button.getParent();
+		int button_parent_id = ll.getId();
+		int fragment_container_id = 0;
 
 		int frag_no = 0;
 		String frag_tag = null;
-		switch (container_id) {
+		switch (button_parent_id) {
 			case R.id.buttonset1:
 				frag_no = 1;
 				frag_tag = FRAGTAG1;
+				fragment_container_id = R.id.container1;
 				break;
 			case R.id.buttonset2:
 				frag_no = 2;
 				frag_tag = FRAGTAG2;
+				fragment_container_id = R.id.container2;
 				break;
 			default:
-				throw new IllegalStateException("Bad container id: " + container_id);
+				throw new IllegalStateException("Bad container id: " + button_parent_id);
 		}
 
 		FragmentManager fm = getFragmentManager();
@@ -226,7 +233,7 @@ public class MainActivity extends ActivityPrintStates
 		if (mf == null) {
 			if (create) {
 				mf = new MyFragment();
-				mf.init(this, frag_no, frag_tag, container_id);
+				mf.init(this, frag_no, frag_tag, fragment_container_id);
 				trace.log("getMyFragment()",
 					String.format("New fragment: %#x", Trace.getId(mf)));
 			}
@@ -241,6 +248,11 @@ public class MainActivity extends ActivityPrintStates
 	}
 
 //</editor-fold>
+	//<editor-fold desc="TRACING">
+	private void tracesep(String label) {
+		bh.log("-----------------------------\n");
+		trace.log(label);
+	}
 	class InfoImpl implements Trace.Info {
 		// "this", from the object that created this instance
 		private Object obj = null;
@@ -253,45 +265,5 @@ public class MainActivity extends ActivityPrintStates
 			return String.format("This:%-22s", Trace.toStringSimple(obj));
 		}
 	}
-}
-
-class Trace {
-	static final public String SEP_APS = "|";
-	static final public String SEP_APP = "  |";
-	static final public String SEP_FRG = "    |";
-	static final public String SEP_VGP = "      |";
-	static final public String SEP_VEW = "        |";
-	static final public String SEP_PRSTATE  = "          >";
-
-	private Bhlogger    bh   = null;
-	private Info        info = null;
-	private String      sep  = null;
-
-	interface Info {
-		public String getData();
-	}
-
-	Trace(String logtag, String _sep, Info _info) {
-		bh     = new Bhlogger(logtag);
-		sep    = _sep;
-		info   = _info;
-	}
-
-	public void log(String label) { log(label, ""); }
-	public void log(String label, String msg) {
-		String data = info.getData();
-		writelog(sep, label, data, msg);
-	}
-	// Main trace method. Used by all trace methods.
-	private void writelog(String sep, String label, String data, String msg) {
-		String leader = String.format("%s %-20s: ", sep, label);
-		String s = String.format("%-30s Data:[%s] Msg:[%s]", leader, data, msg);
-		bh.log(s);
-	}
-	static public String toStringSimple(Object obj) {
-		return obj.getClass().getSimpleName() + '@' + Integer.toHexString(getId(obj));
-	}
-	static public int getId(Object obj) {
-		return obj.hashCode();
-	}
+	//</editor-fold>
 }

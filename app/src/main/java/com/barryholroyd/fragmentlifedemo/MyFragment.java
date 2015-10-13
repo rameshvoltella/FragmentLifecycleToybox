@@ -11,7 +11,6 @@ import android.view.ViewGroup;
  */
 public class MyFragment extends FragmentPrintStates
 {
-	static final private Bhlogger   bh           = new Bhlogger("FLD MYF");
 	private Context                 context      = null;
 	private int                     frag_no      = 0;
 	private String                  frag_tag     = null;// Needed until tag is added in a transaction.
@@ -21,7 +20,7 @@ public class MyFragment extends FragmentPrintStates
 
 	public void init(Context c, int fno, String ftag, int cid) {
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace("FLD FRG", Trace.SEP_FRG, info);
+		trace = new Trace(MainActivity.LOGTAG_FRAGMENT, Trace.SEP_FRG, info);
 		context = c;
 		frag_no = fno;
 		frag_tag = ftag;
@@ -68,20 +67,14 @@ public class MyFragment extends FragmentPrintStates
 			boolean is_detached = mf.isDetached();
 			int frag_id = mf.getId();
 			FldTextView frag_view = (FldTextView) mf.getView();
-			String vstring = frag_view.toStringSimple();
+			String vstring = Trace.toStringSimple(frag_view);
 			String tag = mf.getMyTag();
 			int hash_code = mf.hashCode();
 			// Object	host_obj	= mf.getHost(); // Requires API 23
 			String s = String.format(
 				"Fragment #%d: %b,%b,%#x,%s,%s,%#x,%s",
-				frag_no,
-				is_added,
-				is_detached,
-				frag_id,
-				vstring,
-				tag,
-				hash_code,
-				Trace.toStringSimple(this)
+				frag_no, is_added, is_detached, frag_id,
+				vstring, tag, hash_code, Trace.toStringSimple(this)
 			);
 			return s;
 		}

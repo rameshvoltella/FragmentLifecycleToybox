@@ -29,9 +29,9 @@ public class FldLinearLayout extends LinearLayout
 	}
 	private void init() {
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace("FLD VGP", Trace.SEP_VGP, info);
+		trace = new Trace(MainActivity.LOGTAG_VIEWGROUP, Trace.SEP_VGP, info);
 		debug(5); // int is depth of indentation
-		trace.log("FldLinearLayout Constructor");
+		trace.log("FldLinearLayout(NEW)");
 	}
 	//</editor-fold>
 	//<editor-fold desc="OVERRIDES: VIEW GROUP">
