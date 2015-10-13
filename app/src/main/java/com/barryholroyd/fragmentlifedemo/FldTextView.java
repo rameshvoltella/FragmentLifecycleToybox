@@ -7,75 +7,79 @@ import android.widget.TextView;
  * Created by Barry on 10/12/2015.
  */
 
-/*
- * Use these?
- *   getParent()
- *   getRootView()
- */
 public class FldTextView extends TextView
 {
-	static public Bhlogger bh = new Bhlogger("FLD TXT");
-	private int id = 0;
-
+	//<editor-fold desc="FIELDS">
+	private Trace trace = null;
+	//</editor-fold>
+	//<editor-fold desc="CONSTRUCTORS">
 	public FldTextView(Context context) {
 		super(context);
-		id = generateViewId();
-		setId(id);
-		// setTag(key, Object);
-		trace("FldTextView");
+		setId(generateViewId());
+		InfoImpl  info  = new InfoImpl(this);
+		trace = new Trace("FLD VGP", Trace.SEP_VEW, info);
+		trace.log("FldTextView Constructor");
 	}
-
+	//</editor-fold>
+	//<editor-fold desc="OVERRIDES">
 	@Override
 	protected void onAttachedToWindow() {
 		// This is called when the view is attached to a window.
 		// At this point it has a Surface and will start drawing.
-		trace("onAttachedToWindow");
+		trace.log("onAttachedToWindow");
 		super.onAttachedToWindow();
 	}
 	@Override
 	public void onDetachedFromWindow() {
-		trace("onDetachedFromWindow");
+		trace.log("onDetachedFromWindow");
 		super.onDetachedFromWindow();
 	}
 	@Override
 	protected void onFinishInflate() {
-		trace("onFinishInflate");
+		trace.log("onFinishInflate");
 		super.onFinishInflate();
 	}
 //	@Override
 //	public void onLayout(boolean changed, int left, int top, int right, int bottom) {
 //		// TBD: is this o.k.?
 //		super.onLayout(changed, left, top, right, bottom);
-//		trace("onLayout");
+//		trace.log("onLayout");
 //	}
 //	@Override
 //	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 //		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
-//		trace("onMeasure");
+//		trace.log("onMeasure");
 //	}
 //	@Override
 //	public Parcelable onSaveInstanceState() {
-//		trace("onSaveInstanceState");
+//		trace.log("onSaveInstanceState");
 //		return super.onSaveInstanceState();
 //	}
 //	@Override
 //	public void onRestoreInstanceState(Parcelable state) {
 //		super.onRestoreInstanceState(state);
-//		trace("onRestoreInstanceState");
+//		trace.log("onRestoreInstanceState");
 //	}
-
-	private void trace(String label) { trace(label, ""); }
-	private void trace(String label, String msg) {
-		String data = getFldTextViewInfo();
-		MainActivity.traceMain(MainActivity.SEP_VIEW, label, data, msg);
+	//</editor-fold>
+	//<editor-fold desc="TRACE SUPPORT">
+	public void fldTvTrace() {
+		trace.log("FldTextView");
 	}
-	public String getFldTextViewInfo() {
-		String s = String.format("ThisId=%#x, This:%-22s",
-			this.getId(), this.toStringSimple());
-		return s;
+	class InfoImpl implements Trace.Info
+	{
+		// "this", from the object that created this instance
+		private Object obj = null;
+		InfoImpl(Object obj) {
+			this.obj = obj;
+		}
+		public String getData() {
+			FldTextView fld_tv = (FldTextView) obj;
+			String s = String.format(
+				"TextViewId=%#x, TextViewHashCode=%#x, TextView2String=%s",
+				fld_tv.getId(), fld_tv.hashCode(), Trace.toStringSimple(fld_tv));
+			return s;
+		}
 	}
-	public String toStringSimple() {
-		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
-	}
+	//</editor-fold>
 }

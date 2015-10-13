@@ -11,27 +11,30 @@ import android.view.ViewGroup;
  */
 public class MyFragment extends FragmentPrintStates
 {
-	static final private Bhlogger bh = new Bhlogger("FLD MYF");
-	private Context context          = null;
-	MyFragment my_fragment           = null;
-	int hash_val                     = 0;
+	static final private Bhlogger   bh           = new Bhlogger("FLD MYF");
+	private Context                 context      = null;
+	private int                     frag_no      = 0;
+	private String                  frag_tag     = null;// Needed until tag is added in a transaction.
+	private int                     container_id = 0;
+	private int                     hash_val     = 0;
+	private Trace                   trace        = null;
 
-	public MyFragment() {
-		hash_val = this.hashCode();
-		bh.log(String.format(
-			"MyFragment(NEW): %#x",
-			this.hashCode()));
-	}
-
-	public static MyFragment newInstance(Context c) {
-		MyFragment mf = new MyFragment();
-		mf.init(c);
-		bh.log("MyFragment.newInstance: new fragment");
-		return mf;
-	}
-
-	private void init(Context c) {
+	public void init(Context c, int fno, String ftag, int cid) {
+		InfoImpl  info  = new InfoImpl(this);
+		trace = new Trace("FLD FRG", Trace.SEP_FRG, info);
 		context = c;
+		frag_no = fno;
+		frag_tag = ftag;
+		container_id = cid;
+		hash_val = this.hashCode();
+		trace.log("MyFragment()", String.format("MyFragment(NEW): %#x", this.hashCode()));
+	}
+
+	public int getNumber() { return frag_no; }
+	public String getMyTag() { return frag_tag; } // distinct from Fragment.getTag()
+	public int getContainerId() { return container_id; }
+	public void trace() {
+		trace.log("Fragment");
 	}
 
 	@Override
@@ -43,28 +46,44 @@ public class MyFragment extends FragmentPrintStates
 		FldTextView fld_tv = new FldTextView(context);
 		int fld_tv_id = fld_tv.getId();
 
-		trace("onCreateView()",
+		trace.log("onCreateView()",
 			String.format(
-				"creating and return new FldTextView; id=%#x; container id: %#x",
-				container_id));
+				"New FldTextView: view_id=%#x, container_id=%#x", fld_tv_id, container_id));
 
 		return fld_tv;
 	}
 
-	private void trace(String label) {
-		trace(label, "");
-	}
-	private void trace(String label, String msg) {
-		String s = String.format("%s%s", MainActivity.SEP_FRAG,getMyFragmentInfo(label, msg));
-		bh.log(s);
-	}
-	public String getMyFragmentInfo(String label, String msg) {
-		String s = String.format(
-			"%-15s [%#x] (%s): %s",
-			label, this.getId(), this.toStringSimple(), msg);
-		return s;
-	}
-	public String toStringSimple() {
-		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+	class InfoImpl implements Trace.Info
+	{
+		// "this", from the object that created this instance
+		private Object obj = null;
+
+		InfoImpl(Object obj) {
+			this.obj = obj;
+		}
+
+		public String getData() {
+			MyFragment mf = (MyFragment) obj;
+			boolean is_added = mf.isAdded();
+			boolean is_detached = mf.isDetached();
+			int frag_id = mf.getId();
+			FldTextView frag_view = (FldTextView) mf.getView();
+			String vstring = frag_view.toStringSimple();
+			String tag = mf.getMyTag();
+			int hash_code = mf.hashCode();
+			// Object	host_obj	= mf.getHost(); // Requires API 23
+			String s = String.format(
+				"Fragment #%d: %b,%b,%#x,%s,%s,%#x,%s",
+				frag_no,
+				is_added,
+				is_detached,
+				frag_id,
+				vstring,
+				tag,
+				hash_code,
+				Trace.toStringSimple(this)
+			);
+			return s;
+		}
 	}
 }

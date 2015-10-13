@@ -11,110 +11,109 @@ import android.widget.LinearLayout;
  */
 public class FldLinearLayout extends LinearLayout
 {
-	private Bhlogger bh = new Bhlogger("FLD  LAY");
-	private int id = 0;
-
+	//<editor-fold desc="FIELDS">
+	private Trace trace = null;
+	//</editor-fold>
+	//<editor-fold desc="CONSTRUCTORS">
 	public FldLinearLayout(Context context) {
 		super(context);
 		init();
 	}
-
 	public FldLinearLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
-
 	public FldLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		init();
 	}
-
-	public FldLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int
-		defStyleRes) {
-		super(context, attrs, defStyleAttr, defStyleRes);
-		init();
-	}
-
 	private void init() {
-		id = getId();
+		InfoImpl  info  = new InfoImpl(this);
+		trace = new Trace("FLD VGP", Trace.SEP_VGP, info);
 		debug(5); // int is depth of indentation
+		trace.log("FldLinearLayout Constructor");
 	}
-
-	//  ------------------------------------------------------------------
-	//  From ViewGroup
-	//  ------------------------------------------------------------------
+	//</editor-fold>
+	//<editor-fold desc="OVERRIDES: VIEW GROUP">
 	@Override
 	public void onViewAdded(View child) {
+		trace.log("onViewAdded");
 		super.onViewAdded(child);
-		trace("onViewAdded");
 	}
-
 	@Override
 	public void onViewRemoved(View child) {
+		trace.log("onViewRemoved");
 		super.onViewRemoved(child);
-		trace("onViewRemoved");
 	}
-
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		trace.log("onLayout");
 		super.onLayout(changed, l, t, r, b);
-		trace("onLayout");
 	}
-
-	//  ------------------------------------------------------------------
-	//  From View
-	//  ------------------------------------------------------------------
+	//</editor-fold>
+	//<editor-fold desc="OVERRIDES: VIEW    ">
 	@Override
 	protected void onAttachedToWindow() {
 		// This is called when the view is attached to a window.
 		// At this point it has a Surface and will start drawing.
-		trace("onAttachedToWindow");
+		trace.log("onAttachedToWindow");
 		super.onAttachedToWindow();
 	}
 	@Override
 	public void onDetachedFromWindow() {
-		trace("onDetachedFromWindow");
+		trace.log("onDetachedFromWindow");
 		super.onDetachedFromWindow();
 	}
 	@Override
 	protected void onFinishInflate() {
-		trace("onFinishInflate");
+		trace.log("onFinishInflate");
 		super.onFinishInflate();
 	}
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		trace.log("onMeasure");
 		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
-		trace("onMeasure");
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 	@Override
 	public Parcelable onSaveInstanceState() {
-		trace("onSaveInstanceState");
+		trace.log("onSaveInstanceState");
 		return super.onSaveInstanceState();
 	}
 	@Override
 	public void onRestoreInstanceState(Parcelable state) {
+		trace.log("onRestoreInstanceState");
 		super.onRestoreInstanceState(state);
-		trace("onRestoreInstanceState");
 	}
-
-	//  ------------------------------------------------------------------
-	//  Support Methods
-	//  ------------------------------------------------------------------
-	private void trace(String label) { trace(label, ""); }
-
-	private void trace(String label, String msg) {
-		String data = getFldLinearLayoutInfo();
-		MainActivity.traceMain(MainActivity.SEP_VIEW, label, data, msg);
+	//</editor-fold>
+	//<editor-fold desc="TRACE SUPPORT">
+	public void fldLlTrace() {
+		trace.log("FldLinearLayout");
+		traceChildren();
 	}
-	public String getFldLinearLayoutInfo() {
-		String s = String.format("ThisId=%#x, This:%-22s",
-			this.getId(), this.toStringSimple());
-		return s;
+	private void traceChildren() {
+		// Print container's children's info.
+		int child_cnt = getChildCount();
+		for (int i = 0 ; i < child_cnt ; i++) {
+			// There should only be FldTextView children present.
+			FldTextView fld_tv = (FldTextView) getChildAt(i);
+			fld_tv.fldTvTrace();
+		}
 	}
-
-	public String toStringSimple() {
-		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+	class InfoImpl implements Trace.Info
+	{
+		// "this", from the object that created this instance
+		private Object obj = null;
+		InfoImpl(Object obj) {
+			this.obj = obj;
+		}
+		public String getData() {
+			FldLinearLayout fld_ll = (FldLinearLayout) obj;
+			String s = String.format(
+				"ContainerId=%#x, ContainerHashCode=%#x, Container2String=%s",
+				fld_ll.getId(), fld_ll.hashCode(), Trace.toStringSimple(fld_ll));
+			return s;
+		}
 	}
-
+	//</editor-fold>
 }
