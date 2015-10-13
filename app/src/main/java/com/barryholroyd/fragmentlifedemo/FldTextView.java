@@ -14,30 +14,16 @@ import android.widget.TextView;
  */
 public class FldTextView extends TextView
 {
-	static public Bhlogger bh = new Bhlogger("FLD VGP");
+	static public Bhlogger bh = new Bhlogger("FLD TXT");
 	private int id = 0;
 
 	public FldTextView(Context context) {
 		super(context);
 		id = generateViewId();
 		setId(id);
-
 		// setTag(key, Object);
-
 		trace("FldTextView");
 	}
-
-//	public FldTextView(Context context, AttributeSet attrs) {
-//		super(context, attrs);
-//	}
-//
-//	public FldTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-//		super(context, attrs, defStyleAttr);
-//	}
-//
-//	public FldTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-//		super(context, attrs, defStyleAttr, defStyleRes);
-//	}
 
 	@Override
 	protected void onAttachedToWindow() {
@@ -81,13 +67,15 @@ public class FldTextView extends TextView
 
 	private void trace(String label) { trace(label, ""); }
 	private void trace(String label, String msg) {
-		String s = String.format("%s%s", MainActivity.SEP_VIEW,getFldTextViewInfo(label, msg));
-		bh.log(s);
+		String data = getFldTextViewInfo();
+		MainActivity.traceMain(MainActivity.SEP_VIEW, label, data, msg);
 	}
-	public String getFldTextViewInfo(String label, String msg) {
-		String s = String.format(
-			"%-15s [%#x] (%s): %s",
-			label, this.getId(), this.toString(), msg);
+	public String getFldTextViewInfo() {
+		String s = String.format("ThisId=%#x, This:%-22s",
+			this.getId(), this.toStringSimple());
 		return s;
+	}
+	public String toStringSimple() {
+		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
 	}
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  */
 public class MyFragment extends FragmentPrintStates
 {
-	static final private Bhlogger bh = new Bhlogger("FLD MFR");
+	static final private Bhlogger bh = new Bhlogger("FLD MYF");
 	private Context context          = null;
 	MyFragment my_fragment           = null;
 	int hash_val                     = 0;
@@ -19,7 +19,7 @@ public class MyFragment extends FragmentPrintStates
 	public MyFragment() {
 		hash_val = this.hashCode();
 		bh.log(String.format(
-			"MyFragment(NEW): 0#x",
+			"MyFragment(NEW): %#x",
 			this.hashCode()));
 	}
 
@@ -61,7 +61,10 @@ public class MyFragment extends FragmentPrintStates
 	public String getMyFragmentInfo(String label, String msg) {
 		String s = String.format(
 			"%-15s [%#x] (%s): %s",
-			label, this.getId(), this.toString(), msg);
+			label, this.getId(), this.toStringSimple(), msg);
 		return s;
+	}
+	public String toStringSimple() {
+		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
 	}
 }

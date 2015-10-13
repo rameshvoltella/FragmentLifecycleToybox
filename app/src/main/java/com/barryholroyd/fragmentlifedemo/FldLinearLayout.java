@@ -11,11 +11,31 @@ import android.widget.LinearLayout;
  */
 public class FldLinearLayout extends LinearLayout
 {
-	private Bhlogger bh = new Bhlogger("FLD  VW");
+	private Bhlogger bh = new Bhlogger("FLD  LAY");
 	private int id = 0;
 
 	public FldLinearLayout(Context context) {
 		super(context);
+		init();
+	}
+
+	public FldLinearLayout(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+	public FldLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
+
+	public FldLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int
+		defStyleRes) {
+		super(context, attrs, defStyleAttr, defStyleRes);
+		init();
+	}
+
+	private void init() {
 		id = getId();
 		debug(5); // int is depth of indentation
 	}
@@ -78,21 +98,23 @@ public class FldLinearLayout extends LinearLayout
 		trace("onRestoreInstanceState");
 	}
 
-
 	//  ------------------------------------------------------------------
 	//  Support Methods
 	//  ------------------------------------------------------------------
 	private void trace(String label) { trace(label, ""); }
 
 	private void trace(String label, String msg) {
-		String s = String.format("%s%s", MainActivity.SEP_VGRP,getFldLinearLayoutInfo(label, msg));
-		bh.log(s);
+		String data = getFldLinearLayoutInfo();
+		MainActivity.traceMain(MainActivity.SEP_VIEW, label, data, msg);
 	}
-	public String getFldLinearLayoutInfo(String label, String msg) {
-		String s = String.format(
-			"%-15s [%#x] (%s): %s",
-			label, this.getId(), this.toString(), msg);
+	public String getFldLinearLayoutInfo() {
+		String s = String.format("ThisId=%#x, This:%-22s",
+			this.getId(), this.toStringSimple());
 		return s;
+	}
+
+	public String toStringSimple() {
+		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
 	}
 
 }

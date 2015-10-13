@@ -9,17 +9,18 @@ import android.widget.Button;
 
 public class MainActivity extends ActivityPrintStates
 {
+	//<editor-fold desc="FIELDS">
 	static public Bhlogger bh = new Bhlogger("FLD APP");
 
-	static final public String SEP_APP  = "| ";
-	static final public String SEP_APS  = "  | ";
+	static final public String SEP_APS  = "| ";
+	static final public String SEP_APP  = "  | ";
 	static final public String SEP_FRAG = "    | ";
 	static final public String SEP_VGRP = "      | ";
 	static final public String SEP_VIEW = "        | ";
 	static final public String SEP_PRSTATE = "          ";
 
-	private int     parent_id	        = 0;
-	private int     my_id	            = 0;
+	private int button_parent_id = 0;
+	private int button_id = 0;
 	private int     frag_no             = 0;
 	private int     frag_container_id   = 0;
 	private String  frag_tag            = "FragTag0";
@@ -28,18 +29,20 @@ public class MainActivity extends ActivityPrintStates
 	private MyFragment mf  = null; // the current fragment of interest (mf1 or mf2)
 	private MyFragment mf1 = null; // single hook, can hold a single instance
 	private MyFragment mf2 = null; // single hook, can hold a single instance
-
+	//</editor-fold>
+	//<editor-fold desc="OVERRIDDEN METHODS">
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		trace("  onCreate", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
-		trace("  onCreate", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
+		trace("onCreate", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
+		trace("onCreate", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 	}
-
+	//</editor-fold>
+	//<editor-fold desc="BUTTONS">
 	public void buttonCreateFragment(View v)	{
 		getButtonInfo(v);
-		trace("buttonCreateFragment");
+		tracesep("buttonCreateFragment");
 		mf = MyFragment.newInstance(this);
 		switch (frag_no) {
 			case 1: mf1 = mf; break;
@@ -92,7 +95,6 @@ public class MainActivity extends ActivityPrintStates
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(frag_container_id);
 		fld_ll.removeView(view);
 	}
-
 	public void buttonRemoveFragment(View v)	{
 		getButtonInfo(v);
 		trace("buttonRemoveFragment");
@@ -103,7 +105,7 @@ public class MainActivity extends ActivityPrintStates
 	}
 	public void buttonReplaceFragment(View v)	{
 		getButtonInfo(v);
-		trace("buttonReplaceFragment");
+		tracesep("buttonReplaceFragment");
 		if (! checkVals()) return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.replace(frag_container_id, mf, frag_tag);
@@ -118,7 +120,7 @@ public class MainActivity extends ActivityPrintStates
 		//   its view hierarchy to be re-created, attached to the UI,
 		//   and displayed.
 		getButtonInfo(v);
-		trace("buttonAttachFragment");
+		tracesep("buttonAttachFragment");
 		if (! checkVals()) return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.attach(mf);
@@ -134,7 +136,7 @@ public class MainActivity extends ActivityPrintStates
 		//   actively managed by the fragment manager. When going into
 		//   this state its view hierarchy is destroyed.
 		getButtonInfo(v);
-		trace("buttonDetachFragment");
+		tracesep("buttonDetachFragment");
 		if (! checkVals()) return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.detach(mf);
@@ -143,7 +145,7 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonHideFragment(View v)		{
 		// This will cause the fragment's View to be hidden.
 		getButtonInfo(v);
-		trace("buttonHideFragment");
+		tracesep("buttonHideFragment");
 		if (! checkVals()) return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.hide(mf);
@@ -152,13 +154,14 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonShowFragment(View v)		{
 		// This will cause the fragment's View to be shown.
 		getButtonInfo(v);
-		trace("buttonShowFragment");
+		tracesep("buttonShowFragment");
 		if (! checkVals()) return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.show(mf);
 		ft.commit();
 	}
-	
+	//</editor-fold>
+	//<editor-fold desc="SUPPORT METHODS">
 	private boolean checkVals() {
 		if (mf == null) {
 			bh.log("*** MyFragment is null... skipping command.");
@@ -167,17 +170,16 @@ public class MainActivity extends ActivityPrintStates
 
 		return true;
 	}
-
 	private void getButtonInfo(View v) {
 
 		Button b		= (Button) v;
-		my_id			= b.getId();
+		button_id = b.getId();
 
 		ViewParent vp		= b.getParent();
 		View parent_view	= (View) vp;
-		parent_id		= parent_view.getId();
+		button_parent_id = parent_view.getId();
 
-		switch (parent_id) {
+		switch (button_parent_id) {
 			case R.id.buttonset1:
 				frag_no = 1;
 				mf = mf1;
@@ -190,29 +192,19 @@ public class MainActivity extends ActivityPrintStates
 				frag_tag = "FragTag2";
 				frag_container_id = R.id.container2;
 				break;
-			default: throw new IllegalStateException("Bad fragment id: " + parent_id);
+			default: throw new IllegalStateException("Bad fragment id: " + button_parent_id);
 		}
 	}
-
-	// --------------------------------------------------------------------
-	// FRAGMENT METHODS
-	// --------------------------------------------------------------------
-	private void doFragment(int fragnumber) {
-		bh.log("DO FRAGMENT #" + fragnumber);
-	}
-	// --------------------------------------------------------------------
-	// SUPPORT METHODS
-	// --------------------------------------------------------------------
-
+	//</editor-fold>
+	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
 		printFragmentInfo(1, "FragTag1");
 		printFragmentInfo(2, "FragTag2");
 
 		printContainerInfo(1, R.id.container1);
-		printContainerInfo(2, R.id.container1);
+		printContainerInfo(2, R.id.container2);
 
 	}
-
 	private void printFragmentInfo(int frag_no, String frag_tag) {
 		MyFragment mf = (MyFragment) fm.findFragmentByTag(frag_tag);
 		if (mf == null) {
@@ -225,8 +217,8 @@ public class MainActivity extends ActivityPrintStates
 		boolean	is_added	= mf.isAdded();
 		boolean	is_detached	= mf.isDetached();
 		int	frag_id		= mf.getId();
-		String	frag_view	= mf.getView().toString();
-
+		FldTextView frag_view = (FldTextView) mf.getView();
+		String	vstring	= frag_view.toStringSimple();
 // Requires API 23
 //		Object	host_obj	= mf.getHost();
 //		String	host_obj_string	= host_obj == null
@@ -234,7 +226,6 @@ public class MainActivity extends ActivityPrintStates
 //					  : host_obj.toString();
 		String	tag		= mf.getTag();
 		int	hash_code	= mf.hashCode();
-
 		String s = String.format(
 // API 23:   "Fragment #%d: %b,%b,%#x,%s,%s,%s,%#x",
 			"Fragment #%d: %b,%b,%#x,%s,%s,%#x",
@@ -242,14 +233,13 @@ public class MainActivity extends ActivityPrintStates
 			is_added,
 			is_detached,
 			frag_id,
-			frag_view,
+			vstring,
 // API 23:	host_obj_string,
 			tag,
 			hash_code
 		);
 		trace("Fragment", s);
 	}
-
 	private void printContainerInfo(int frag_no, int frag_container_id) {
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(frag_container_id);
 
@@ -259,40 +249,50 @@ public class MainActivity extends ActivityPrintStates
 				frag_container_id));
 		}
 
-		String msg = String.format("Container #%d: %#x, %#x",
+		// Print container info.
+		String msg = String.format("Container #%d: ContainerId=%#x, ContainerHashCode=%#x",
 			frag_no, frag_container_id, fld_ll.hashCode());
-		String s = String.format("%s%s", MainActivity.SEP_PRSTATE,
-			fld_ll.getFldLinearLayoutInfo("", ""));
-		trace("Container", s);
+		String data = fld_ll.getFldLinearLayoutInfo();
+		traceInfo("Container", data, msg);
+
+		// Print container's children's info.
 		int child_cnt = fld_ll.getChildCount();
 		for (int i = 0 ; i < child_cnt ; i++) {
 			// There should only be FldTextView children present.
 			FldTextView fld_tv = (FldTextView) fld_ll.getChildAt(i);
-			printFldTextView(fld_tv);
+			String msg2 = String.format("");
+			String data2 = fld_tv.getFldTextViewInfo();
+			traceInfo("FldTextView", data2, msg2);
 		}
 	}
-
-	void printFldTextView(FldTextView fld_tv) {
-		String s = String.format("%s%s", MainActivity.SEP_PRSTATE,
-			fld_tv.getFldTextViewInfo("", ""));
-		trace("FldTextView", s);
+	private void traceInfo(String label, String data, String msg) {
+		traceMain(MainActivity.SEP_PRSTATE, label, data, msg);
 	}
 
+	private void tracesep(String label) {
+		bh.log("-----------------------------\n");
+		trace(label);
+	}
 	private void trace(String label) { trace(label, ""); }
 	private void trace(String label, String msg) {
-		String s = String.format("%s%s%s",
-			"\n-----------------------------\n",
-			MainActivity.SEP_APP,
-			getAppInfo(label, msg));
-		bh.log(s);
+		String data = getAppInfo();
+		traceMain(MainActivity.SEP_APP, label, data, msg);
 	}
-	private String getAppInfo(String label, String msg) {
+	private String getAppInfo() {
 		String s = String.format(
-			"%-15s: %d. {%#x -> %#x} (%s): %s",
-			label, frag_no, my_id, parent_id,
-			this.toString(), msg);
+			"FragNo=%d : This:%-22s :: Button:%#x -> ButtonParent:%#x",
+			frag_no, this.toStringSimple(), button_id, button_parent_id);
 		return s;
 	}
+	static public void traceMain(String sep, String label, String data, String msg) {
+		String leader = String.format("%-20s [%s]", sep, label);
+		String s = String.format("%-30s <%s> Msg: %s", leader, data, msg);
+		bh.log(s);
+	}
+	public String toStringSimple() {
+		return getClass().getSimpleName() + '@' + Integer.toHexString(hashCode());
+	}
+	//</editor-fold>
 }
 
 
