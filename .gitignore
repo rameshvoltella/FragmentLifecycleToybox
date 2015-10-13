@@ -1,0 +1,86 @@
+###############################################################################
+# Documentation
+###############################################################################
+#
+# Format of .gitignore:		http://git-scm.com/docs/gitignore
+# Forcing use of .gitignore:	http://stackoverflow.com/questions/29052342/
+#				android-studio-git-gitignore-vs-project-
+#				settings-version-control-ignored
+# Guidelines:			https://intellij-support.jetbrains.com/
+#				entries/23393067
+# 				https://www.jetbrains.com/idea/webhelp10.5/
+#				project.html
+# Stackoverflow Discussion:	http://stackoverflow.com/questions/16736856/
+#				what-should-be-in-my-gitignore-for-an-android
+#				-studio-project
+#
+###############################################################################
+# Cloning
+###############################################################################
+#
+# Background:
+#   Assume a basic project called Earthquake with a single application modules
+#   called "app" (a typical scenario).
+#
+#   The following files exist:
+#
+#     .idea/modules.xml:	Specifies the modules (Earthquake and app).
+#     app/app.iml:		Configuration info. for the app module.
+#     Earthquake.iml:		Configuration info. for the Earthquake project
+#				module.
+#
+#   The "versioning" requirements for tham are:
+#
+#     .idea/modules.xml:	This must be versioned because it identifies the
+#				"app" module; it won't be automatically
+#				created.
+#     app/app.iml:		This must be versioned because it is referenced
+#				by modules.xml and won't be automatically
+#				created.
+#     Earthquake.iml:		This doesn't have to be versioned since it will
+#				be automatically created.
+#
+# Cloning to a different project name (e.g., from Earthquake to Earthquake2)
+# is problematic. modules.xml and app.iml *have* to be checked in (see above).
+# However, they both get modified and, since they are being tracked by git,
+# git wants to push the changes back out to the server. Ideally, these two
+# files would not be under version control, but then there wouldn't be a way
+# to get them into place during the initial clone (when the original copies
+# are, in fact, needed).
+#
+# Therefore, the project name of the clone must be the same as the original
+# project name.
+#
+###############################################################################
+# Configuration
+###############################################################################
+#
+# The following will allow a repo to be pushed and pulled by Android Studio.
+# The new clone must have the same name as the original repo.
+# During the initial build process, Android Studio will complain about being
+#   unable to load Earthquake. This is just because at that point there are
+#   two entries for it in modules.xml. When prompted, just allow it to be
+#   removed (one of the entries will be retained).
+#
+# E.g., Earthquake.iml
+/*.iml
+
+# Local configuration information.
+local.properties
+.idea/workspace.xml
+.idea/tasks.xml
+
+# Generated directories (or directories with generated files).
+.gradle/
+.idea/libraries/
+build/
+notes/
+
+# General stuff
+*~
+*.swp
+
+# Mac-specific:
+# .DS_Store
+#
+###############################################################################

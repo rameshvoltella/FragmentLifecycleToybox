@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <include layout="@layout/buttonset" android:id="@+id/buttonset1"/>
+    <include layout="@layout/buttonset" android:id="@+id/buttonset2"/>
+    <com.barryholroyd.fragmentlifedemo.FldLinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container1"
+        >
+    </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
+    <com.barryholroyd.fragmentlifedemo.FldLinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container2"
+        >
+    </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
+</LinearLayout>
