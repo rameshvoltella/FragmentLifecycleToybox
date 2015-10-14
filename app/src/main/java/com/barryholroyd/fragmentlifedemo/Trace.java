@@ -8,6 +8,7 @@ import android.widget.TextView;
 /**
  * Created by Barry on 10/13/2015.
  */
+
 class Trace {
 	static final public String LOGTAG_APPLC         = "FLD APP LC     ";
 	static final public String LOGTAG_APP           = "FLD APP        ";
@@ -17,11 +18,11 @@ class Trace {
 	static final public String LOGTAG_VIEW          = "FLD VIEW       ";
 
 	static final public String SEP_APPLC		= "|";
-	static final public String SEP_APP		    = " |";
-	static final public String SEP_FRAGMENTLC	= "  |";
-	static final public String SEP_FRAGMENT     = "   |";
+	static final public String SEP_APP		    = "  |";
 	static final public String SEP_VIEWGROUP    = "    |";
-	static final public String SEP_VIEW         = "     |";
+	static final public String SEP_FRAGMENTLC	= "      |";
+	static final public String SEP_FRAGMENT     = "        |";
+	static final public String SEP_VIEW         = "          |";
 
 	private Bhlogger    bh   = null;
 	private Info        info = null;
@@ -66,19 +67,23 @@ class Trace {
 	private void writelog(String sep, String label, String data, String msg) {
 		String leader = String.format("%s %s:", sep, label);
 		String s = String.format("%-28s Data:[%s] Msg:[%s]", leader, data, msg);
+		bh.log(s);
 		if (log_pane != null)
 			log_pane.append(s + '\n');
-		else
-			bh.log("SKIPPING LOG PANE");
-		bh.log(s);
+		else {
+			String s2 = String.format("%-28s Data:[%s] Msg:[%s]",
+				leader, data, "LOG PANE: SKIPPING.");
+			bh.log(s2);
+		}
 	}
 	static public String toStringSimple(Object obj) {
 		if (obj == null)
 			return "<null>";
 		else
-			return obj.getClass().getSimpleName() + '@' + Integer.toHexString(getId(obj));
+			return obj.getClass().getSimpleName() + '@' + getIdHc(obj);
 	}
-	static public int getId(Object obj) {
-		return obj.hashCode();
+	static public String getIdHc(Object obj) {
+		// Standardize on using hash codes for ids.
+		return String.format("%#x", obj.hashCode());
 	}
 }

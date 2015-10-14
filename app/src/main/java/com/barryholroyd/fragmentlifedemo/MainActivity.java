@@ -8,24 +8,46 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+//<editor-fold desc="APPLICATION NOTES">
+/*
+ * Application Notes
+ *   o Rotating the device will cause the log pane to lose its previous text. This could be
+ *     managed by use ove onSaveInstanceState(), but that isn't really critical.
+ */
+//</editor-fold>
+
 public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
 	private FragmentManager fm = getFragmentManager();
 
+	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
+	private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
+
 	static final private String FRAGTAG1 = "FragTag1";
 	static final private String FRAGTAG2 = "FragTag2";
 
 	private enum FTCMD {    // FragmentTransaction commands
-		ADD_WITHOUT_VIEW,
-		ADD_WITH_VIEW,
-		REMOVE,
-		REPLACE,
-		DETACH,
-		ATTACH,
-		HIDE,
-		SHOW
+		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
+		ADD_WITH_VIEW("ADD_WITH_VIEW"),
+		REMOVE("REMOVE"),
+		REPLACE("REPLACE"),
+		DETACH("DETACH"),
+		ATTACH("ATTACH"),
+		HIDE("HIDE"),
+		SHOW("SHOW"),
+		;
+
+		private String cmdname = null;
+		FTCMD(String name) {
+			cmdname = name;
+		}
+		String getString() { return cmdname; }
 	}
 
 	//</editor-fold>
@@ -39,7 +61,7 @@ public class MainActivity extends ActivityPrintStates
 		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 		Trace.init(this);
-		trace.log("(start up)", "Log pane initialized.");
+		trace.log("(start up)", "LOG PANE: INITIALIZED.");
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -92,9 +114,10 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonAddFragmentView(View v)		{
 		trace.log("buttonAddFragmentView");
 		MyFragment mf = getMyFragmentWrapper(v);
-		if (mf == null)
+		if (mf == null) {
+			trace.log("buttonAddFragmentView", "Fragment does not exit yet.");
 			return;
-
+		}
 		View view = mf.getView();
 		if (view == null) {
 			trace.log("buttonAddFragmentView", "Fragment does not have a view.");
@@ -108,9 +131,10 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonRemoveFragmentView(View v)		{
 		trace.log("buttonRemoveFragmentView");
 		MyFragment mf = getMyFragmentWrapper(v);
-		if (mf == null)
+		if (mf == null) {
+			trace.log("buttonRemoveFragmentView", "Fragment does not exit yet.");
 			return;
-
+		}
 		View view = mf.getView();
 		if (view == null) {
 			trace.log("buttonRemoveFragmentView", "Fragment does not have a view.");
@@ -143,10 +167,24 @@ public class MainActivity extends ActivityPrintStates
 		MyFragment mf = (MyFragment) fm.findFragmentByTag(ftag);
 		if (mf == null) {
 			trace.log("printFragmentInfo",
-				String.format("No Fragment #%d yet.", fno));
+				String.format(
+					"%s(#%d) not added to FragmentManager yet. Transient MFs: %s.",
+					ftag, fno, getTransientMfs()));
 			return;
 		}
 		mf.trace();
+	}
+	private String getTransientMfs() {
+		Set keys = transientMyFragments.keySet();
+		Iterator<String> iter = keys.iterator();
+		String s = "";
+		while (iter.hasNext()) {
+			String key = iter.next();
+			MyFragment mf = transientMyFragments.get(key);
+			if (!s.equals("")) {s += ", ";}
+			s += String.format("%s=%#x", key, mf.hashCode());
+		}
+		return s == null ? "" : s;
 	}
 	private void printContainerInfo(int cid) {
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(cid);
@@ -162,20 +200,41 @@ public class MainActivity extends ActivityPrintStates
 	private void execFtCommand(String label, View v, FTCMD cmd) {
 		tracesep(label);
 		MyFragment mf = getMyFragmentWrapper(v);
-		if (mf == null)
+		if (mf == null) {
+			trace.log("execFtCommand",
+				String.format("Fragment does not exit yet (CMD: %s).", cmd.getString()));
 			return;
+		}
 		FragmentTransaction ft = fm.beginTransaction();
 		String ftag = mf.getMyTag();
 		int cid = mf.getContainerId();
+
+		/*
+		 * SUMMARY:
+		 *   o Add and Delete add/delete the fragment from the FragmentManager.
+		 *   o Attach and Detach do not -- they leave the fragment in the Fragment Manager.
+		 *
+		 * Add:    Add a fragment to the "Activity State".
+		 *         Optionally have its View inserted into a container.
+		 * Remove: Remove a fragment from the "Activity State".
+		 *         If it was added to a container, its view is also removed from that container.
+		 * Detach: Detach the given fragment from the UI.
+		 *         This is the same state as when it is put on the back stack:
+		 *           o the fragment is removed from the UI.
+		 *           o its state is still being actively managed by the fragment manager.
+		 *         When going into this state its view hierarchy is destroyed.
+		 * Attach: Re-attach a fragment after it had previously been detached from the UI with detach(Fragment).
+		 *         This causes its view hierarchy to be re-created, attached to the UI, and displayed.
+		 */
 		switch(cmd) {
-			case ADD_WITHOUT_VIEW:	ft.add(mf, ftag);		    break;
-			case ADD_WITH_VIEW:	    ft.add(cid, mf, ftag);	    break;
-			case REMOVE:		    ft.remove(mf);			    break;
-			case REPLACE:		    ft.replace(cid, mf, ftag);	break;
-			case DETACH:		    ft.detach(mf);			    break;
-			case ATTACH:		    ft.attach(mf);			    break;
-			case HIDE:		        ft.hide(mf);			    break;
-			case SHOW:		        ft.show(mf);			    break;
+			case ADD_WITHOUT_VIEW: ft.add(mf, ftag);	  transientMyFragments.remove(ftag);  break;
+			case ADD_WITH_VIEW:	   ft.add(cid, mf, ftag); transientMyFragments.remove(ftag);  break;
+			case REMOVE:		   ft.remove(mf);		  transientMyFragments.put(ftag, mf); break;
+			case REPLACE:		   ft.replace(cid, mf, ftag); break;
+			case DETACH:		   ft.detach(mf);		  break;
+			case ATTACH:		   ft.attach(mf);	      break;
+			case HIDE:		       ft.hide(mf);			  break;
+			case SHOW:		       ft.show(mf);			  break;
 		}
 		ft.commit();
 		printState();
@@ -189,13 +248,6 @@ public class MainActivity extends ActivityPrintStates
 		}
 		return mf;
 	}
-	private int getFragmentNumberForView(View v) {
-		switch (((ViewGroup)v.getParent()).getId()) {
-			case R.id.buttonset1:   return 1;
-			case R.id.buttonset2:   return 2;
-			default:                return 0;
-		}
-	}
 	private MyFragment getMyFragment(View v, boolean create) {
 
 		// Get the fragment corresponding to the button's container.
@@ -204,46 +256,61 @@ public class MainActivity extends ActivityPrintStates
 		int button_parent_id = ll.getId();
 		int fragment_container_id = 0;
 
-		int frag_no = 0;
-		String frag_tag = null;
+		int fno = 0;
+		String ftag = null;
 		switch (button_parent_id) {
 			case R.id.buttonset1:
-				frag_no = 1;
-				frag_tag = FRAGTAG1;
+				fno = 1;
+				ftag = FRAGTAG1;
 				fragment_container_id = R.id.container1;
 				break;
 			case R.id.buttonset2:
-				frag_no = 2;
-				frag_tag = FRAGTAG2;
+				fno = 2;
+				ftag = FRAGTAG2;
 				fragment_container_id = R.id.container2;
 				break;
 			default:
 				throw new IllegalStateException("Bad container id: " + button_parent_id);
 		}
 
+		MyFragment mf = transientMyFragments.get(ftag);
+		if (mf != null) {
+			trace.log("getMyFragment()",
+				String.format("Existing transient fragment (not in FragmentManager): %s",
+					Trace.getIdHc(mf)));
+			return mf;
+		}
+
 		FragmentManager fm = getFragmentManager();
-		MyFragment mf = (MyFragment) fm.findFragmentByTag(frag_tag);
+		mf = (MyFragment) fm.findFragmentByTag(ftag);
 		if (mf == null) {
 			if (create) {
-				mf = new MyFragment();
-				mf.init(this, frag_no, frag_tag, fragment_container_id);
 				trace.log("getMyFragment()",
-					String.format("New fragment: %#x", Trace.getId(mf)));
+					String.format("New fragment: %s", Trace.getIdHc(mf)));
+				mf = new MyFragment();
+				mf.init(this, fno, ftag, fragment_container_id);
+				transientMyFragments.put(ftag, mf);
 			}
 			else
 				trace.log("getMyFragment()", "No fragment yet.");
 
 		} else
 			trace.log("getMyFragment()",
-				String.format("Existing fragment: %#x", Trace.getId(mf)));
+				String.format("Existing fragment in FragmentManager: %s", Trace.getIdHc(mf)));
 
 		return mf;
 	}
-
+	private int getFragmentNumberForView(View v) {
+		switch (((ViewGroup)v.getParent()).getId()) {
+			case R.id.buttonset1:   return 1;
+			case R.id.buttonset2:   return 2;
+			default:                return 0;
+		}
+	}
 //</editor-fold>
 	//<editor-fold desc="TRACING">
 	private void tracesep(String label) {
-		trace.log("-->> " + label);
+		trace.log(label);
 	}
 	class InfoImpl implements Trace.Info {
 		// "this", from the object that created this instance

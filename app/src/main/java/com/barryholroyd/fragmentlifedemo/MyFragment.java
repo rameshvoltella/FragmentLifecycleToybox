@@ -26,7 +26,7 @@ public class MyFragment extends FragmentPrintStates
 		frag_tag = ftag;
 		container_id = cid;
 		hash_val = this.hashCode();
-		trace.log("MyFragment()", String.format("MyFragment(NEW): %#x", this.hashCode()));
+		trace.log("MyFragment()", String.format("MyFragment(NEW): %s", Trace.getIdHc(this)));
 	}
 
 	public int getNumber() { return frag_no; }

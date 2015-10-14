@@ -37,7 +37,6 @@
     </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
     <TextView
         style="@style/LogStyle"
-        android:gravity="bottom"
         android:id="@+id/log_pane"
-        />
+    />
 </LinearLayout>
