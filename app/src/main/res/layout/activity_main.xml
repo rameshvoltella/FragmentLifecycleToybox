@@ -45,16 +45,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
+        <!--<ScrollView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!-->-->
             <TextView
                 style="@style/LogStyle"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:scrollbars="vertical"
                 android:id="@+id/log_pane"
                 />
-        </ScrollView>
+        <!--</ScrollView>-->
     </HorizontalScrollView>
 </LinearLayout>

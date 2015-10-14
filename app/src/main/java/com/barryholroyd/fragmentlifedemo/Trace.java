@@ -43,7 +43,7 @@ class Trace {
 	static public void init(Activity activity) {
 		a = activity;
 		log_pane = (TextView) a.findViewById(R.id.log_pane);
-//		DEL: log_pane.setMovementMethod(new ScrollingMovementMethod());
+		log_pane.setMovementMethod(new ScrollingMovementMethod());
 		initTypeface(a, log_pane);
 	}
 
