@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">FragmentLifeDemo</string>
+    <string name="app_name">Fragment Lifecycle Demo</string>
     <string name="action_settings">Settings</string>
 </resources>

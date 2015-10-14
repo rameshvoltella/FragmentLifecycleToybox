@@ -20,7 +20,7 @@ public class MyFragment extends FragmentPrintStates
 
 	public void init(Context c, int fno, String ftag, int cid) {
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(MainActivity.LOGTAG_FRAGMENT, Trace.SEP_FRG, info);
+		trace = new Trace(Trace.LOGTAG_FRAGMENT, Trace.SEP_FRAGMENT, info);
 		context = c;
 		frag_no = fno;
 		frag_tag = ftag;

@@ -17,7 +17,7 @@ public class FldTextView extends TextView
 		super(context);
 		setId(generateViewId());
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace("FLD VEW", Trace.SEP_VEW, info);
+		trace = new Trace(Trace.LOGTAG_VIEW, Trace.SEP_VIEW, info);
 		trace.log("FldTextView(NEW)");
 	}
 	//</editor-fold>

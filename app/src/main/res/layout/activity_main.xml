@@ -47,9 +47,12 @@
         >
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
             <TextView
                 style="@style/LogStyle"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
                 android:id="@+id/log_pane"
                 />
         </ScrollView>

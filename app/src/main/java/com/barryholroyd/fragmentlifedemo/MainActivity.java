@@ -17,15 +17,6 @@ public class MainActivity extends ActivityPrintStates
 	static final private String FRAGTAG1 = "FragTag1";
 	static final private String FRAGTAG2 = "FragTag2";
 
-	static final public String LOGTAG_APP           = "FLD APP        ";
-	static final public String LOGTAG_APPLC         = "FLD APP LC     ";
-	static final public String LOGTAG_FRAGMENTLC    = "FLD FRAGMENT LC";
-	static final public String LOGTAG_FRAGMENT      = "FLD FRAGMENT   ";
-	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP ";
-
-	static public Bhlogger bh = new Bhlogger(LOGTAG_APP);
-
-
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW,
 		ADD_WITH_VIEW,
@@ -43,7 +34,7 @@ public class MainActivity extends ActivityPrintStates
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(LOGTAG_APP, Trace.SEP_APP, info);
+		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, info);
 		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
 		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
 		setContentView(R.layout.activity_main);
@@ -194,7 +185,7 @@ public class MainActivity extends ActivityPrintStates
 		if (mf == null) {
 			int fno = getFragmentNumberForView(v);
 			String msg = String.format("Fragment #%d doesn't exist yet.", fno);
-			trace.log("buttonAddFragmentWithView", msg);
+			trace.log("getMyFragmentWrapper", msg);
 		}
 		return mf;
 	}
@@ -252,8 +243,7 @@ public class MainActivity extends ActivityPrintStates
 //</editor-fold>
 	//<editor-fold desc="TRACING">
 	private void tracesep(String label) {
-		bh.log("-----------------------------\n");
-		trace.log(label);
+		trace.log("-->> " + label);
 	}
 	class InfoImpl implements Trace.Info {
 		// "this", from the object that created this instance

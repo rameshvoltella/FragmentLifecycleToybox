@@ -9,11 +9,19 @@ import android.widget.TextView;
  * Created by Barry on 10/13/2015.
  */
 class Trace {
-	static final public String SEP_APS = "|";
-	static final public String SEP_APP = " |";
-	static final public String SEP_FRG = "  |";
-	static final public String SEP_VGP = "   |";
-	static final public String SEP_VEW = "    |";
+	static final public String LOGTAG_APPLC         = "FLD APP LC     ";
+	static final public String LOGTAG_APP           = "FLD APP        ";
+	static final public String LOGTAG_FRAGMENTLC    = "FLD FRAGMENT LC";
+	static final public String LOGTAG_FRAGMENT      = "FLD FRAGMENT   ";
+	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP ";
+	static final public String LOGTAG_VIEW          = "FLD VIEW       ";
+
+	static final public String SEP_APPLC		= "|";
+	static final public String SEP_APP		    = " |";
+	static final public String SEP_FRAGMENTLC	= "  |";
+	static final public String SEP_FRAGMENT     = "   |";
+	static final public String SEP_VIEWGROUP    = "    |";
+	static final public String SEP_VIEW         = "     |";
 
 	private Bhlogger    bh   = null;
 	private Info        info = null;
@@ -48,7 +56,9 @@ class Trace {
 
 	public void log(String label) { log(label, ""); }
 	public void log(String label, String msg) {
-		String data = info.getData();
+		String data = "";
+		if (info != null)
+			data = info.getData();
 		writelog(sep, label, data, msg);
 	}
 	// Main trace method. Used by all trace methods.
