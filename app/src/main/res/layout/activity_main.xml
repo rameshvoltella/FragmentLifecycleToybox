@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/red_500"
+    android:background="@color/purple_500"
     android:padding="15dp"
     >
     <HorizontalScrollView
@@ -41,21 +41,20 @@
         <!--android:id="@+id/log_pane"-->
         <!--/>-->
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-        <!--<ScrollView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!-->-->
+    <!--<HorizontalScrollView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!-->-->
             <TextView
-                style="@style/LogStyle"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:scrollbars="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scrollHorizontally="true"
+                android:scrollbars="horizontal|vertical"
+                android:background="@color/lightyellow"
                 android:id="@+id/log_pane"
                 />
-        <!--</ScrollView>-->
-    </HorizontalScrollView>
+                <!--style="@style/LogStyle"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--android:gravity="bottom"-->
+    <!--</HorizontalScrollView>-->
 </LinearLayout>
