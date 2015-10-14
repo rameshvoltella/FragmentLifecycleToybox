@@ -115,7 +115,7 @@ public class MainActivity extends ActivityPrintStates
 		trace.log("buttonAddFragmentView");
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
-			trace.log("buttonAddFragmentView", "Fragment does not exit yet.");
+			trace.log("buttonAddFragmentView", "Fragment does not exist yet.");
 			return;
 		}
 		View view = mf.getView();
@@ -126,13 +126,14 @@ public class MainActivity extends ActivityPrintStates
 		int container_id = mf.getContainerId();
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(container_id);
 		fld_ll.addView(view);
+		trace.logCode("fld_ll.addView(view);");
 		printState();
 	}
 	public void buttonRemoveFragmentView(View v)		{
 		trace.log("buttonRemoveFragmentView");
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
-			trace.log("buttonRemoveFragmentView", "Fragment does not exit yet.");
+			trace.log("buttonRemoveFragmentView", "Fragment does not exist yet.");
 			return;
 		}
 		View view = mf.getView();
@@ -143,13 +144,15 @@ public class MainActivity extends ActivityPrintStates
 		int container_id = mf.getContainerId();
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(container_id);
 		fld_ll.removeView(view);
+		trace.logCode("fld_ll.removeView(view);");
 		printState();
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
-		// Print Fragments information
+		trace.log("printState");
 
+		// Print Fragments information
 		printFragmentInfo(1);
 		printFragmentInfo(2);
 
@@ -168,7 +171,7 @@ public class MainActivity extends ActivityPrintStates
 		if (mf == null) {
 			trace.log("printFragmentInfo",
 				String.format(
-					"%s(#%d) not added to FragmentManager yet. Transient MFs: %s.",
+					"%s(#%d) not in the FragmentManager. Transient MFs: %s.",
 					ftag, fno, getTransientMfs()));
 			return;
 		}
@@ -205,9 +208,16 @@ public class MainActivity extends ActivityPrintStates
 				String.format("Fragment does not exit yet (CMD: %s).", cmd.getString()));
 			return;
 		}
-		FragmentTransaction ft = fm.beginTransaction();
-		String ftag = mf.getMyTag();
-		int cid = mf.getContainerId();
+		/*
+		 * We can't catch exceptions in the code below (and continue, having reported them)
+		 *   because when that happens executePendingTransactions() apparently never completes
+		 *   and we get a "java.lang.IllegalStateException: Recursive entry to
+		 *   executePendingTransactions" exception the next time we enter this method. Because
+		 *   of that, we have to catch exceptional conditions in advance and live with any
+		 *   unexpected exceptions (i.e., the app will crash).
+		 *
+		 * TBD: find some way to deal with the recursive executePendingTransactions error.
+		 */
 
 		/*
 		 * SUMMARY:
@@ -226,17 +236,53 @@ public class MainActivity extends ActivityPrintStates
 		 * Attach: Re-attach a fragment after it had previously been detached from the UI with detach(Fragment).
 		 *         This causes its view hierarchy to be re-created, attached to the UI, and displayed.
 		 */
+		FragmentTransaction ft = fm.beginTransaction();
+		String ftag = mf.getMyTag();
+		int cid = mf.getContainerId();
+
 		switch(cmd) {
-			case ADD_WITHOUT_VIEW: ft.add(mf, ftag);	  transientMyFragments.remove(ftag);  break;
-			case ADD_WITH_VIEW:	   ft.add(cid, mf, ftag); transientMyFragments.remove(ftag);  break;
-			case REMOVE:		   ft.remove(mf);		  transientMyFragments.put(ftag, mf); break;
-			case REPLACE:		   ft.replace(cid, mf, ftag); break;
-			case DETACH:		   ft.detach(mf);		  break;
-			case ATTACH:		   ft.attach(mf);	      break;
-			case HIDE:		       ft.hide(mf);			  break;
-			case SHOW:		       ft.show(mf);			  break;
+			case ADD_WITHOUT_VIEW:
+				trace.logCode("ft.add(mf, ftag);");
+				if (fragmentInFragmentManager(label, ftag))
+					return;
+				ft.add(mf, ftag);
+				transientMyFragments.remove(ftag);
+				break;
+			case ADD_WITH_VIEW:
+				trace.logCode("ft.add(cid, mf, ftag);");
+				if (fragmentInFragmentManager(label, ftag))
+					return;
+				ft.add(cid, mf, ftag);
+				transientMyFragments.remove(ftag);
+				break;
+			case REMOVE:
+				ft.remove(mf);
+				transientMyFragments.put(ftag, mf);
+				trace.logCode("ft.remove(mf);");
+				break;
+			case REPLACE:
+				ft.replace(cid, mf, ftag);
+				trace.logCode("ft.replace(cid, mf, ftag);");
+				break;
+			case DETACH:
+				ft.detach(mf);
+				trace.logCode("ft.detach(mf);");
+				break;
+			case ATTACH:
+				ft.attach(mf);
+				trace.logCode("ft.attach(mf);");
+				break;
+			case HIDE:
+				ft.hide(mf);
+				trace.logCode("ft.hide(mf);");
+				break;
+			case SHOW:
+				ft.show(mf);
+				trace.logCode("ft.show(mf);");
+				break;
 		}
 		ft.commit();
+		fm.executePendingTransactions();
 		printState();
 	}
 	private MyFragment getMyFragmentWrapper(View v) {
@@ -287,6 +333,7 @@ public class MainActivity extends ActivityPrintStates
 			if (create) {
 				trace.log("getMyFragment()",
 					String.format("New fragment: %s", Trace.getIdHc(mf)));
+				trace.logCode("mf = new MyFragment();");
 				mf = new MyFragment();
 				mf.init(this, fno, ftag, fragment_container_id);
 				transientMyFragments.put(ftag, mf);
@@ -306,6 +353,14 @@ public class MainActivity extends ActivityPrintStates
 			case R.id.buttonset2:   return 2;
 			default:                return 0;
 		}
+	}
+	private boolean fragmentInFragmentManager(String label, String ftag) {
+		if (fm.findFragmentByTag(ftag) != null) {
+			trace.log(label,
+				String.format("%s is already in the FragmentManager.", ftag));
+			return true;
+		}
+		return false;
 	}
 //</editor-fold>
 	//<editor-fold desc="TRACING">

@@ -36,7 +36,12 @@
         >
     </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
     <TextView
-        style="@style/LogStyle"
+        style="@style/CodePaneStyle"
+        android:hint="code hints will appear here"
+        android:id="@+id/code_pane"
+        />
+    <TextView
+        style="@style/LogPaneStyle"
         android:id="@+id/log_pane"
     />
 </LinearLayout>
