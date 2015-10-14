@@ -1,5 +1,10 @@
 package com.barryholroyd.fragmentlifedemo;
 
+import android.app.Activity;
+import android.graphics.Typeface;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.TextView;
+
 /**
  * Created by Barry on 10/13/2015.
  */
@@ -14,6 +19,9 @@ class Trace {
 	private Info        info = null;
 	private String      sep  = null;
 
+	static private Activity a         = null;
+	static private TextView log_pane  = null;
+
 	interface Info {
 		public String getData();
 	}
@@ -22,6 +30,20 @@ class Trace {
 		bh     = new Bhlogger(logtag);
 		sep    = _sep;
 		info   = _info;
+	}
+
+	static public void init(Activity activity) {
+		a = activity;
+		log_pane = (TextView) a.findViewById(R.id.log_pane);
+//		DEL: log_pane.setMovementMethod(new ScrollingMovementMethod());
+		initTypeface(a, log_pane);
+	}
+
+	static private void initTypeface(Activity a, TextView tv) {
+//		Typeface myTypeface = Typeface.createFromAsset(a.getAssets(), "font/Roboto-BoldItalic.ttf");
+		Typeface myTypeface = Typeface.MONOSPACE;
+		tv.setTypeface(myTypeface);
+		tv.setTextSize(15);
 	}
 
 	public void log(String label) { log(label, ""); }
@@ -33,6 +55,10 @@ class Trace {
 	private void writelog(String sep, String label, String data, String msg) {
 		String leader = String.format("%s %s:", sep, label);
 		String s = String.format("%-28s Data:[%s] Msg:[%s]", leader, data, msg);
+		if (log_pane != null)
+			log_pane.append(s + '\n');
+		else
+			bh.log("SKIPPING LOG PANE");
 		bh.log(s);
 	}
 	static public String toStringSimple(Object obj) {

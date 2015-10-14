@@ -2,11 +2,26 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:background="@color/red_500"
+    android:padding="15dp"
     >
-    <include layout="@layout/buttonset" android:id="@+id/buttonset1"/>
-    <include layout="@layout/buttonset" android:id="@+id/buttonset2"/>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/green_500"
+            >
+            <include layout="@layout/buttonset" android:id="@+id/buttonset1"/>
+            <include layout="@layout/buttonset" android:id="@+id/buttonset2"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
     <com.barryholroyd.fragmentlifedemo.FldLinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -21,4 +36,22 @@
         android:id="@+id/container2"
         >
     </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
+    <!--<TextView-->
+        <!--style="@style/LogStyle"-->
+        <!--android:id="@+id/log_pane"-->
+        <!--/>-->
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/LogStyle"
+                android:id="@+id/log_pane"
+                />
+        </ScrollView>
+    </HorizontalScrollView>
 </LinearLayout>

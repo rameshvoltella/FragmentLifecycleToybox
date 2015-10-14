@@ -6,73 +6,58 @@
               android:id="@+id/buttonset"
     >
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Create"
         android:onClick="buttonCreateFragment"
         />
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Add (include View)"
         android:onClick="buttonAddFragmentWithView"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Add (no View)"
         android:onClick="buttonAddFragmentWithoutView"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Add View to Fragment"
         android:onClick="buttonAddFragmentView"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Rm View from Fragment"
         android:onClick="buttonRemoveFragmentView"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Remove"
         android:onClick="buttonRemoveFragment"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Replace"
         android:onClick="buttonReplaceFragment"
         />
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Attach"
         android:onClick="buttonAttachFragment"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Detach"
         android:onClick="buttonDetachFragment"
         />
-
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Hide"
         android:onClick="buttonHideFragment"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/ButtonStyle"
         android:text="Show"
         android:onClick="buttonShowFragment"
         />
-
 </LinearLayout>

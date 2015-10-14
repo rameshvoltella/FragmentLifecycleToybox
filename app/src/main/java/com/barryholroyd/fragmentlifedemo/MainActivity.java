@@ -47,6 +47,8 @@ public class MainActivity extends ActivityPrintStates
 		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
 		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
 		setContentView(R.layout.activity_main);
+		Trace.init(this);
+		trace.log("(start up)", "Log pane initialized.");
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -175,14 +177,14 @@ public class MainActivity extends ActivityPrintStates
 		String ftag = mf.getMyTag();
 		int cid = mf.getContainerId();
 		switch(cmd) {
-			case ADD_WITHOUT_VIEW:       ft.add(mf, ftag); break;
-			case ADD_WITH_VIEW:       ft.add(cid, mf, ftag); break;
-			case REMOVE:   break;
-			case REPLACE:   break;
-			case DETACH:   break;
-			case ATTACH:   break;
-			case HIDE:   break;
-			case SHOW:   break;
+			case ADD_WITHOUT_VIEW:	ft.add(mf, ftag);		    break;
+			case ADD_WITH_VIEW:	    ft.add(cid, mf, ftag);	    break;
+			case REMOVE:		    ft.remove(mf);			    break;
+			case REPLACE:		    ft.replace(cid, mf, ftag);	break;
+			case DETACH:		    ft.detach(mf);			    break;
+			case ATTACH:		    ft.attach(mf);			    break;
+			case HIDE:		        ft.hide(mf);			    break;
+			case SHOW:		        ft.show(mf);			    break;
 		}
 		ft.commit();
 		printState();
