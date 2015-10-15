@@ -13,6 +13,7 @@ public class FldLinearLayout extends LinearLayout
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
+
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
 	public FldLinearLayout(Context context) {
@@ -47,7 +48,8 @@ public class FldLinearLayout extends LinearLayout
 	}
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		trace.log("onLayout");
+		if (MainActivity.trace_layout_and_measure)
+			trace.log("onLayout");
 		super.onLayout(changed, l, t, r, b);
 	}
 	//</editor-fold>
@@ -71,7 +73,8 @@ public class FldLinearLayout extends LinearLayout
 	}
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		trace.log("onMeasure");
+		if (MainActivity.trace_layout_and_measure)
+			trace.log("onMeasure");
 		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}

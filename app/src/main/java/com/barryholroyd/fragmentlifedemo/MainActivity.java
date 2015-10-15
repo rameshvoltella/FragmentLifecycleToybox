@@ -32,6 +32,10 @@ public class MainActivity extends ActivityPrintStates
 	static final private String FRAGTAG1 = "FragTag1";
 	static final private String FRAGTAG2 = "FragTag2";
 
+	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
+	// Set the following manually, as desired.
+	static final public boolean trace_layout_and_measure = true;
+
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
 		ADD_WITH_VIEW("ADD_WITH_VIEW"),

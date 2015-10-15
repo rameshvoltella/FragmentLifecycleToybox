@@ -21,8 +21,12 @@ import android.view.ViewGroup;
 public class FragmentPrintStates extends Fragment
 {
   //<editor-fold desc="FIELDS">
-  private Trace trace = new Trace(Trace.LOGTAG_FRAGMENTLC, Trace.SEP_FRAGMENTLC, null);
+  private Trace trace = new Trace(Trace.LOGTAG_FRAGLC, Trace.SEP_FRAGMENTLC, null);
   //</editor-fold>
+  public void setLogTag(String s) {
+	  trace.setLogTag(s);
+  }
+
   //<editor-fold desc="OVERRIDES">
   // Called when the fragment's activity has been created and this fragment's view hierarchy instantiated.
   @Override

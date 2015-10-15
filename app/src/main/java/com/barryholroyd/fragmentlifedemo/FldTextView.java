@@ -42,14 +42,16 @@ public class FldTextView extends TextView
 //	@Override
 //	public void onLayout(boolean changed, int left, int top, int right, int bottom) {
 //		// TBD: is this o.k.?
+//	    if (MainActivity.trace_layout_and_measure)
+//		    trace.log("onLayout");
 //		super.onLayout(changed, left, top, right, bottom);
-//		trace.log("onLayout");
 //	}
 //	@Override
 //	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
-//		trace.log("onMeasure");
+//	    if (MainActivity.trace_layout_and_measure)
+//		    trace.log("onMeasure");
+//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 //	}
 //	@Override
 //	public Parcelable onSaveInstanceState() {

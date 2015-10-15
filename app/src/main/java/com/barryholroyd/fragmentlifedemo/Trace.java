@@ -11,12 +11,16 @@ import android.widget.TextView;
 
 class Trace {
 	//<editor-fold desc="FIELDS">
-	static final public String LOGTAG_APPLC         = "FLD APP LC     ";
-	static final public String LOGTAG_APP           = "FLD APP        ";
-	static final public String LOGTAG_FRAGMENTLC    = "FLD FRAGMENT LC";
-	static final public String LOGTAG_FRAGMENT      = "FLD FRAGMENT   ";
-	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP ";
-	static final public String LOGTAG_VIEW          = "FLD VIEW       ";
+	static final public String LOGTAG_APPLC         = "FLD APP LC      ";
+	static final public String LOGTAG_APP           = "FLD APP         ";
+	static final public String LOGTAG_FRAGLC        = "FLD FRAGMENT LC ";    // tmp
+	static final public String LOGTAG_FRAGLC_STAT   = "FLD FRAG LC STAT";
+	static final public String LOGTAG_FRAGLC_DYN    = "FLD FRAG LC DYN ";
+	static final public String LOGTAG_FRAG          = "FLD FRAGMENT    ";    // tmp
+	static final public String LOGTAG_FRAG_STAT     = "FLD FRAG STAT   ";
+	static final public String LOGTAG_FRAG_DYN      = "FLD FRAG DYN    ";
+	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP  ";
+	static final public String LOGTAG_VIEW          = "FLD VIEW        ";
 
 	static final public String SEP_APPLC		= "|";
 	static final public String SEP_APP		    = "  |";
@@ -66,6 +70,9 @@ class Trace {
 		if (obj == null)
 			return "<null>";
 		return String.format("%#x", obj.hashCode());
+	}
+	public void setLogTag(String s) {
+		bh.setLogtag(s);
 	}
 	public void logCode(String text) {
 		code_pane.setText(text);

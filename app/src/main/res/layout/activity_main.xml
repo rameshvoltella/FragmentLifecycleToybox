@@ -30,6 +30,14 @@
             android:hint="code hints will appear here"
             android:id="@+id/code_pane"
             />
+        <!-- Comment out the following to turn off the static fragment traces. -->
+        <fragment
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_fragment_static"
+            class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
+            >
+        </fragment>
         <com.barryholroyd.fragmentlifedemo.FldLinearLayout
             style="@style/FragmentPaneStyle"
             android:id="@+id/container1"
