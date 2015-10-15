@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/purple_500"
     android:padding="15dp"
     >
@@ -24,11 +24,11 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/lightgreen"
+        >
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/amber_200"
+            style="@style/ButtonStyle"
             android:id="@+id/button_toggle_lamt"
             android:onClick="buttonToggleLayoutAndMarginTracing"
             />
@@ -37,6 +37,11 @@
             android:hint="code hints will appear here"
             android:id="@+id/code_pane"
             />
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
         <!-- Comment out the following to turn off the static fragment traces. -->
         <fragment
             class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"

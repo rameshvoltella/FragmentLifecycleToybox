@@ -15,10 +15,10 @@
 
     <style name="ButtonStyle">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/lightblue_500</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_blue_light</item>
         <item name="android:layout_margin">5dp</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:padding">5dp</item>
     </style>
     <style name="FragmentPaneStyle">
         <item name="android:orientation">vertical</item>
@@ -29,13 +29,12 @@
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:padding">15dp</item>
     </style>
-
     <style name="CodePaneStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/lightgreen</item>
+        <item name="android:background">@color/blue_200</item>
         <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:padding">15dp</item>
     </style>
     <style name="LogPaneStyle">
