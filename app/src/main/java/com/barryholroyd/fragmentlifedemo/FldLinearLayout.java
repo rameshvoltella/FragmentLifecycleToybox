@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
@@ -99,8 +100,13 @@ public class FldLinearLayout extends LinearLayout
 		int child_cnt = getChildCount();
 		for (int i = 0 ; i < child_cnt ; i++) {
 			// There should only be FldTextView children present.
-			FldTextView fld_tv = (FldTextView) getChildAt(i);
-			fld_tv.fldTvTrace();
+//			FldTextView fld_tv = (FldTextView) getChildAt(i);
+//			fld_tv.fldTvTrace();
+			FrameLayout fl = (FrameLayout) getChildAt(i);
+			if (fl != null) {
+				FldTextView fld_tv = (FldTextView) fl.getChildAt(0);
+				fld_tv.fldTvTrace();
+			}
 		}
 	}
 	class InfoImpl implements Trace.Info

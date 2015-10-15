@@ -8,9 +8,10 @@
     android:gravity="center_vertical"
     android:color="@color/yellow_500"
     >
-    <TextView
+    <com.barryholroyd.fragmentlifedemo.FldTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/InflatedTextView"
+        android:background="@color/pink_500"
         android:id="@+id/static_textview"
         android:text="Inflated TextView"
     />

@@ -42,6 +42,7 @@
             android:id="@+id/code_pane"
             />
         <!-- Comment out the following to turn off the static fragment traces. -->
+        <!--TBD: restore static fragment.-->
         <!--<fragment-->
             <!--class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"-->
             <!--android:layout_width="wrap_content"-->

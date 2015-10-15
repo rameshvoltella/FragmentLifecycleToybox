@@ -1,6 +1,7 @@
 package com.barryholroyd.fragmentlifedemo;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
@@ -15,11 +16,26 @@ public class FldTextView extends TextView
 	//<editor-fold desc="CONSTRUCTORS">
 	public FldTextView(Context context) {
 		super(context);
+		cinit();
+	}
+
+	public FldTextView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		cinit();
+	}
+
+	public FldTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		cinit();
+	}
+
+	private void cinit() {
 		setId(generateViewId());
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_VIEW, Trace.SEP_VIEW, info);
 		trace.log("FldTextView(NEW)");
 	}
+
 	//</editor-fold>
 	//<editor-fold desc="OVERRIDES">
 	@Override

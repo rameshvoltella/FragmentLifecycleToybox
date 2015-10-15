@@ -24,10 +24,9 @@ public class MyFragmentStatic extends FragmentPrintStates
 		FrameLayout fl = (FrameLayout) inflater.inflate(
 			R.layout.static_textview_to_inflate, null, false);
 
+		// DEL: ?
 //		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
 //		trace.log("onCreateView()", "New: " + s);
-
-
 //		TextView tv = (TextView) inflater.inflate(R.layout.static_textview_to_inflate, null, false);
 //		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
 //		trace.log("onCreateView()", "New: " + s);

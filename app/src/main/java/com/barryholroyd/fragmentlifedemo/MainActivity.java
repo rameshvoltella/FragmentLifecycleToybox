@@ -60,13 +60,13 @@ public class MainActivity extends ActivityPrintStates
 		super.onCreate(savedInstanceState);
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, info);
-		trace.log("(onCreate())",
+		trace.log("1. onCreate()",
 			String.format(
 				"Before setContentView(): R.id.buttonset1=%#x, R.id.buttonset2=%#x",
 				R.id.buttonset1, R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 		Trace.init(this);
-		trace.log("onCreate()", "After setContentView(): log pane has been initialized.");
+		trace.log("2. onCreate()", "After setContentView(): log pane has been initialized.");
 
 		Button b = (Button) findViewById(R.id.button_toggle_lamt);
 		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));
@@ -313,20 +313,17 @@ public class MainActivity extends ActivityPrintStates
 		Button button = (Button) v;
 		LinearLayout ll = (LinearLayout) button.getParent();
 		int button_parent_id = ll.getId();
-		int fragment_container_id = 0;
+		int container_rid = 0;
 
-		int fno = 0;
 		String ftag = null;
 		switch (button_parent_id) {
 			case R.id.buttonset1:
-				fno = 1;
 				ftag = FRAGTAG1;
-				fragment_container_id = R.id.container1;
+				container_rid = R.id.container1;
 				break;
 			case R.id.buttonset2:
-				fno = 2;
 				ftag = FRAGTAG2;
-				fragment_container_id = R.id.container2;
+				container_rid = R.id.container2;
 				break;
 			default:
 				throw new IllegalStateException("Bad container id: " + button_parent_id);
@@ -348,7 +345,7 @@ public class MainActivity extends ActivityPrintStates
 					String.format("New fragment: %s", Trace.getIdHc(mf)));
 				trace.logCode("mf = new MyFragment();");
 				mf = new MyFragment();
-				mf.init(this, fno, ftag, fragment_container_id);
+				mf.init(ftag, container_rid);
 				transientMyFragments.put(ftag, mf);
 			}
 			else
