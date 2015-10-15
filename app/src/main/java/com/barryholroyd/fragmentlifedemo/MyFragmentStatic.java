@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 /**
  * Created by Barry on 10/15/2015.
@@ -21,10 +21,17 @@ public class MyFragmentStatic extends FragmentPrintStates
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		// For static fragments, the container is always null at this point (verify).
-		TextView tv = (TextView) inflater.inflate(R.layout.static_textview_to_inflate, null, false);
-		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
-		trace.log("onCreateView()", "New: " + s);
+		FrameLayout fl = (FrameLayout) inflater.inflate(
+			R.layout.static_textview_to_inflate, null, false);
 
-		return tv;
+//		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
+//		trace.log("onCreateView()", "New: " + s);
+
+
+//		TextView tv = (TextView) inflater.inflate(R.layout.static_textview_to_inflate, null, false);
+//		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
+//		trace.log("onCreateView()", "New: " + s);
+//		return tv;
+		return fl;
 	}
 }

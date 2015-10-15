@@ -60,11 +60,13 @@ public class MainActivity extends ActivityPrintStates
 		super.onCreate(savedInstanceState);
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, info);
-		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset1", R.id.buttonset1));
-		trace.log("(start up)", String.format("%s: %#x", "R.id.buttonset2", R.id.buttonset2));
+		trace.log("(onCreate())",
+			String.format(
+				"Before setContentView(): R.id.buttonset1=%#x, R.id.buttonset2=%#x",
+				R.id.buttonset1, R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 		Trace.init(this);
-		trace.log("(start up)", "LOG PANE: INITIALIZED.");
+		trace.log("onCreate()", "After setContentView(): log pane has been initialized.");
 
 		Button b = (Button) findViewById(R.id.button_toggle_lamt);
 		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));

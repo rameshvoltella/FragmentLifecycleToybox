@@ -112,14 +112,11 @@ class Trace {
 		}
 		String leader = String.format("%s %s:", sep, label);
 		String s = String.format("%-32s Data:[%s] Msg:[%s]", leader, data, msg);
-		bh.log(s);
-		if (log_pane != null)
+		if (log_pane == null)
+			s += " Log Pane:[SKIPPING]";
+		else
 			log_pane.append(s + '\n');
-		else {
-			String s2 = String.format("%-30s Data:[%s] Msg:[%s]",
-				leader, data, "LOG PANE: SKIPPING.");
-			bh.log(s2);
-		}
+		bh.log(s);
 	}
 	//</editor-fold>
 }

@@ -99,7 +99,8 @@ public class ActivityPrintStates extends Activity
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-    trace.log(label);
+    String msg = String.format("this=%s", Trace.getIdHc(this));
+    trace.log(label, msg);
   }
   //</editor-fold>
 }
