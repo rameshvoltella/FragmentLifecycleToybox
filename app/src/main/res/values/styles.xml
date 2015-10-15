@@ -20,10 +20,20 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:padding">15dp</item>
     </style>
+    <style name="FragmentPaneStyle">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/pink_200</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:padding">15dp</item>
+    </style>
+
     <style name="CodePaneStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/lightgreen_500</item>
+        <item name="android:background">@color/lightgreen</item>
         <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:padding">15dp</item>

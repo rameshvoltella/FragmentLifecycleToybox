@@ -66,7 +66,7 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
 	public void buttonCreateFragment(View v)	{
-		tracesep("buttonCreateFragment");
+		trace.log("buttonCreateFragment", true);
 		getMyFragment(v, true); // Just create the fragment; the FragmentManager will manage it.
 		printState();
 	}
@@ -201,7 +201,7 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="SUPPORT METHODS">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
-		tracesep(label);
+		trace.log(label, true);
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
 			trace.log("execFtCommand",
@@ -364,9 +364,6 @@ public class MainActivity extends ActivityPrintStates
 	}
 //</editor-fold>
 	//<editor-fold desc="TRACING">
-	private void tracesep(String label) {
-		trace.log(label);
-	}
 	class InfoImpl implements Trace.Info {
 		// "this", from the object that created this instance
 		private Object obj = null;

@@ -70,12 +70,25 @@ class Trace {
 	public void logCode(String text) {
 		code_pane.setText(text);
 	}
-	public void log(String label) { log(label, ""); }
+
+	public void log(boolean newline) {
+		log("", "", newline);
+	}
+
+	public void log(String label, boolean newline) {
+		log(label, "", newline);
+	}
+	public void log(String label) {
+		log(label, "", false);
+	}
 	public void log(String label, String msg) {
+		log(label, msg, false);
+	}
+	public void log(String label, String msg, boolean newline) {
 		String data = "";
 		if (info != null)
 			data = info.getData();
-		writelog(sep, label, data, msg);
+		writelog(sep, label, data, msg, newline);
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRIVATE METHODS">
@@ -84,10 +97,14 @@ class Trace {
 		tv.setTypeface(myTypeface);
 		tv.setTextSize(15);
 	}
-	private void writelog(String sep, String label, String data, String msg) {
-		// Main trace method. Used by all trace methods.
+	private void writelog(String sep, String label, String data, String msg, boolean newline) {
+		if (newline) {
+			bh.log(" ");
+			if (log_pane != null)
+				log_pane.append("\n");
+		}
 		String leader = String.format("%s %s:", sep, label);
-		String s = String.format("%-28s Data:[%s] Msg:[%s]", leader, data, msg);
+		String s = String.format("%-32s Data:[%s] Msg:[%s]", leader, data, msg);
 		bh.log(s);
 		if (log_pane != null)
 			log_pane.append(s + '\n');

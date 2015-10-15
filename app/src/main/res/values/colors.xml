@@ -38,5 +38,7 @@
 
     <color name="lightyellow">#FFFFD6</color>
     <color name="lightblue">#C2FFFF</color>
+    <color name="lightgreen">#99D6AD</color>
+
 
 </resources>

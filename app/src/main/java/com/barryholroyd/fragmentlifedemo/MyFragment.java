@@ -15,7 +15,6 @@ public class MyFragment extends FragmentPrintStates
 	private int                     frag_no      = 0;
 	private String                  frag_tag     = null;// Needed until tag is added in a transaction.
 	private int                     container_id = 0;
-	private int                     hash_val     = 0;
 	private Trace                   trace        = null;
 
 	public void init(Context c, int fno, String ftag, int cid) {
@@ -25,7 +24,6 @@ public class MyFragment extends FragmentPrintStates
 		frag_no = fno;
 		frag_tag = ftag;
 		container_id = cid;
-		hash_val = this.hashCode();
 		trace.log("MyFragment()", String.format("MyFragment(NEW): %s", Trace.getIdHc(this)));
 	}
 
@@ -42,13 +40,12 @@ public class MyFragment extends FragmentPrintStates
 			throw new IllegalStateException("MyFragment not initialized yet.");
 
 		int container_id = container == null ? 0 : container.getId();
+		String s = String.format("FldTextView: container_id=%#x", container_id);
+
+		trace.log("onCreateView()", "New: " + s);
+
 		FldTextView fld_tv = new FldTextView(context);
-		int fld_tv_id = fld_tv.getId();
-
-		trace.log("onCreateView()",
-			String.format(
-				"New FldTextView: view_id=%#x, container_id=%#x", fld_tv_id, container_id));
-
+		fld_tv.setText(s);
 		return fld_tv;
 	}
 
