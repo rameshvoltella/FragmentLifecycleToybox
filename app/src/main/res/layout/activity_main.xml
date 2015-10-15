@@ -25,6 +25,13 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/amber_200"
+            android:id="@+id/button_toggle_lamt"
+            android:onClick="buttonToggleLayoutAndMarginTracing"
+            />
         <TextView
             style="@style/CodePaneStyle"
             android:hint="code hints will appear here"
@@ -32,10 +39,14 @@
             />
         <!-- Comment out the following to turn off the static fragment traces. -->
         <fragment
+            class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/orange_200"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            android:padding="15dp"
             android:id="@+id/my_fragment_static"
-            class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
             >
         </fragment>
         <com.barryholroyd.fragmentlifedemo.FldLinearLayout

@@ -33,8 +33,7 @@ public class MainActivity extends ActivityPrintStates
 	static final private String FRAGTAG2 = "FragTag2";
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
-	// Set the following manually, as desired.
-	static final public boolean trace_layout_and_measure = true;
+	static public boolean trace_layout_and_measure = true;
 
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
@@ -66,6 +65,9 @@ public class MainActivity extends ActivityPrintStates
 		setContentView(R.layout.activity_main);
 		Trace.init(this);
 		trace.log("(start up)", "LOG PANE: INITIALIZED.");
+
+		Button b = (Button) findViewById(R.id.button_toggle_lamt);
+		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -150,6 +152,11 @@ public class MainActivity extends ActivityPrintStates
 		fld_ll.removeView(view);
 		trace.logCode("fld_ll.removeView(view);");
 		printState();
+	}
+	public void buttonToggleLayoutAndMarginTracing(View v) {
+		trace_layout_and_measure = !trace_layout_and_measure;
+		Button b = (Button) v;
+		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
