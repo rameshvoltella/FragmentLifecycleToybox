@@ -47,15 +47,10 @@ public class MyFragment extends FragmentPrintStates
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-		// DEL:
-//		FrameLayout fl = (FrameLayout) inflater.inflate(
-//			R.layout.fld_textview, null, false);
 		FldTextView fldtv = (FldTextView) inflater.inflate(R.layout.fld_textview, null, false);
 		trace.log("onCreateView()",
 			String.format("MyFragment: fldtv=%s, container=%s",
 				Trace.getIdHc(fldtv), Trace.getIdHc(container)));
-
 		return fldtv;
 	}
 	@Override
