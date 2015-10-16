@@ -93,8 +93,8 @@ public class FldTextView extends TextView
 		public String getData() {
 			FldTextView fld_tv = (FldTextView) obj;
 			String s = String.format(
-				"TextViewId=%#x, TextViewHashCode=%#x, TextView2String=%s",
-				fld_tv.getId(), fld_tv.hashCode(), Trace.toStringSimple(fld_tv));
+				"FldTextView: getId()=%#x, C@HC=%s",
+				fld_tv.getId(),  Trace.classAtHc(fld_tv));
 			return s;
 		}
 	}

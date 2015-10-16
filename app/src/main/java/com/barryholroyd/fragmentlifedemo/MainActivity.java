@@ -59,18 +59,19 @@ public class MainActivity extends ActivityPrintStates
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, info);
+		// DEL: ?
+		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, null);
 		trace.log("1. onCreate()",
 			String.format(
 				"Before setContentView(): R.id.buttonset1=%#x, R.id.buttonset2=%#x",
 				R.id.buttonset1, R.id.buttonset2));
 		setContentView(R.layout.activity_main);
 		Trace.init(this);
-		trace.log("2. onCreate()", "After setContentView(): log pane has been initialized.");
+		trace.log("2. onCreate()", "After setContentView(): Log Pane:[INITIALIZED].");
 
 		Button b = (Button) findViewById(R.id.button_toggle_lamt);
-		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));
+		String s = trace_layout_and_measure ? "on" : "off";
+		b.setText(String.format("Layout & Measure: %s", s));
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -133,55 +134,13 @@ public class MainActivity extends ActivityPrintStates
 		// This will cause the fragment's View to be shown.
 		execFtCommand("buttonShowFragment", v, FTCMD.SHOW);
 	}
-	public void buttonAddFragmentView(View v)		{
-		int fno = getFragmentNumberForView(v);
-		trace.log("buttonAddFragmentView", "Fragment #" + fno, true);
-
-		MyFragment mf = getMyFragmentWrapper(v);
-		if (mf == null) {
-			trace.log("buttonAddFragmentView", "Fragment does not exist yet.");
-			return;
-		}
-		View view = mf.getView();
-		if (view == null) {
-			trace.log("buttonAddFragmentView", "Fragment does not have a view.");
-			return;
-		}
-		ViewParent vp = view.getParent();
-		if (vp != null) {
-			trace.log("buttonAddFragmentView", "View already has a parent.");
-			return;
-		}
-		int container_id = mf.getContainerId();
-		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(container_id);
-		fld_ll.addView(view);
-		trace.logCode("fld_ll.addView(view);");
-		printState();
-	}
-	public void buttonRemoveFragmentView(View v)		{
-		int fno = getFragmentNumberForView(v);
-		trace.log("buttonRemoveFragmentView", "Fragment #" + fno, true);
-
-		MyFragment mf = getMyFragmentWrapper(v);
-		if (mf == null) {
-			trace.log("buttonRemoveFragmentView", "Fragment does not exist yet.");
-			return;
-		}
-		View view = mf.getView();
-		if (view == null) {
-			trace.log("buttonRemoveFragmentView", "Fragment does not have a view.");
-			return;
-		}
-		int container_id = mf.getContainerId();
-		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(container_id);
-		fld_ll.removeView(view);
-		trace.logCode("fld_ll.removeView(view);");
-		printState();
-	}
-	public void buttonToggleLayoutAndMarginTracing(View v) {
+	public void buttonToggleLmTracing(View v) {
 		trace_layout_and_measure = !trace_layout_and_measure;
+		String s = trace_layout_and_measure ? "on" : "off";
+		trace.log("buttonToggleLmTracing",
+			String.format("Layout & Measure tracing turned %s.", s));
 		Button b = (Button) v;
-		b.setText(String.format("Layout & Measure: %b", trace_layout_and_measure));
+		b.setText(String.format("Layout & Measure: %s", s));
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
@@ -357,8 +316,9 @@ public class MainActivity extends ActivityPrintStates
 		MyFragment mf = transientMyFragments.get(ftag);
 		if (mf != null) {
 			trace.log("getMyFragment()",
-				String.format("Existing transient fragment (%s not in FragmentManager): %s",
-					mf.getMyTag(), Trace.getIdHc(mf)));
+				String.format(
+					"EXISTING fragment retrieved from transient storage: %s (%s).",
+					mf.getMyTag(), Trace.classAtHc(mf)));
 			return mf;
 		}
 
@@ -366,12 +326,14 @@ public class MainActivity extends ActivityPrintStates
 		mf = (MyFragment) fm.findFragmentByTag(ftag);
 		if (mf == null) {
 			if (create) {
-				trace.log("getMyFragment()",
-					String.format("New fragment: %s", Trace.getIdHc(mf)));
-				trace.logCode("mf = new MyFragment();");
 				mf = new MyFragment();
 				mf.init(ftag, container_rid);
 				transientMyFragments.put(ftag, mf);
+				trace.log("getMyFragment()",
+					String.format(
+						"NEW fragment created: %s (%s) ",
+						mf.getMyTag(), Trace.classAtHc(mf)));
+				trace.logCode("mf = new MyFragment();");
 			}
 			else
 				trace.log("getMyFragment()", "No fragment yet.");
@@ -380,7 +342,7 @@ public class MainActivity extends ActivityPrintStates
 			trace.log("getMyFragment()",
 				String.format("Existing fragment in FragmentManager: %s(%s)",
 					mf.getMyTag(),
-					Trace.getIdHc(mf)));
+					Trace.classAtHc(mf)));
 
 		return mf;
 	}
@@ -400,18 +362,4 @@ public class MainActivity extends ActivityPrintStates
 		return false;
 	}
 //</editor-fold>
-	//<editor-fold desc="TRACING">
-	class InfoImpl implements Trace.Info {
-		// "this", from the object that created this instance
-		private Object obj = null;
-
-	InfoImpl (Object obj) {
-			this.obj = obj;
-		}
-
-		public String getData() {
-			return String.format("This:%-22s", Trace.toStringSimple(obj));
-		}
-	}
-	//</editor-fold>
 }

@@ -50,14 +50,4 @@
         android:text="Show"
         android:onClick="buttonShowFragment"
         />
-    <Button
-        style="@style/ButtonStyle"
-        android:text="Add View to Fragment"
-        android:onClick="buttonAddFragmentView"
-        />
-    <Button
-        style="@style/ButtonStyle"
-        android:text="Rm View from Fragment"
-        android:onClick="buttonRemoveFragmentView"
-        />
 </LinearLayout>

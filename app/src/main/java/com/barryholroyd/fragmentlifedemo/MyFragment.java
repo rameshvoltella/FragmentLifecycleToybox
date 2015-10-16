@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 /**
  * Created by Barry on 10/12/2015.
@@ -26,8 +25,9 @@ public class MyFragment extends FragmentPrintStates
 	public MyFragment() {
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
-		super.setLogTag(Trace.LOGTAG_FRAGLC_DYN);
-		trace.log("MyFragment()", String.format("MyFragment(NEW): %s", Trace.getIdHc(this)));
+//		super.setLogTag(Trace.LOGTAG_FRAGLC_DYN);
+		trace.log("MyFragment()", String.format("MyFragment(NEW)=%s",
+			Trace.classAtHc(this)));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MyFragment extends FragmentPrintStates
 		FldTextView fldtv = (FldTextView) inflater.inflate(R.layout.fld_textview, null, false);
 		trace.log("onCreateView()",
 			String.format("MyFragment: fldtv=%s, container=%s",
-				Trace.getIdHc(fldtv), Trace.getIdHc(container)));
+				Trace.classAtHc(fldtv), Trace.classAtHc(container)));
 		return fldtv;
 	}
 	@Override
@@ -72,20 +72,14 @@ public class MyFragment extends FragmentPrintStates
 
 		public String getData() {
 			MyFragment mf = (MyFragment) obj;
-			boolean is_added = mf.isAdded();
-			boolean is_detached = mf.isDetached();
-			int frag_id = mf.getId();
-
-			FldTextView fldtv = (FldTextView) mf.getView();
-			String vstring = fldtv == null
-				? "<null>"
-				: Trace.toStringSimple(fldtv);
-			String tag = mf.getMyTag();
 			// Object	host_obj	= mf.getHost(); // Requires API 23
+			FldTextView fldtv = (FldTextView) mf.getView();
+			String viewstr = fldtv == null
+				? "<null>" : Trace.classAtHc(fldtv);
 			String s = String.format(
-				"Fragment %s: %b,%b,%#x,%s,%s,%s",
-				tag, is_added, is_detached, frag_id,
-				vstring, Trace.getIdHc(mf), Trace.toStringSimple(this)
+				"getId()=%#x C@HC=%s Tag=%s Added=%b Attached=%b View=%s",
+				mf.getId(), Trace.classAtHc(mf),
+				mf.getMyTag(), mf.isAdded(), !mf.isDetached(), viewstr
 			);
 			return s;
 		}

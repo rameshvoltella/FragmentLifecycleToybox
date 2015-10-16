@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
@@ -113,8 +112,8 @@ public class FldLinearLayout extends LinearLayout
 		public String getData() {
 			FldLinearLayout fld_ll = (FldLinearLayout) obj;
 			String s = String.format(
-				"ContainerId=%#x, ContainerHashCode=%#x, Container2String=%s",
-				fld_ll.getId(), fld_ll.hashCode(), Trace.toStringSimple(fld_ll));
+				"FldLinearLayout: getId()=%#x, C@HC=%s",
+				fld_ll.getId(),  Trace.classAtHc(fld_ll));
 			return s;
 		}
 	}

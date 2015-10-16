@@ -59,13 +59,13 @@ class Trace {
 		code_pane = (TextView) a.findViewById(R.id.code_pane);
 		initTypeface(a, code_pane);
 	}
-	static public String toStringSimple(Object obj) {
+	static public String classAtHc(Object obj) {
 		if (obj == null)
 			return "<null>";
 		else
 			return obj.getClass().getSimpleName() + '@' + getIdHc(obj);
 	}
-	static public String getIdHc(Object obj) {
+	static private String getIdHc(Object obj) {
 		// Standardize on using hash codes for ids.
 		if (obj == null)
 			return "<null>";

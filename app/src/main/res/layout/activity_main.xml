@@ -25,16 +25,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightgreen"
-        android:gravity="center_vertical"
-        android:layout_gravity="center_vertical"
+        android:background="@color/green_500"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:gravity="center_vertical"
         >
         <Button
             style="@style/ButtonStyle"
             android:id="@+id/button_toggle_lamt"
-            android:onClick="buttonToggleLayoutAndMarginTracing"
+            android:onClick="buttonToggleLmTracing"
             />
         <TextView
             style="@style/CodePaneStyle"
@@ -46,6 +44,7 @@
             class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="my_fragment_static"
             android:id="@+id/my_fragment_static"
             >
         </fragment>
@@ -62,6 +61,7 @@
     </LinearLayout>
     <TextView
         style="@style/LogPaneStyle"
+        android:layout_marginTop="15dp"
         android:id="@+id/log_pane"
     />
 </LinearLayout>
