@@ -75,7 +75,8 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
 	public void buttonCreateFragment(View v)	{
-		trace.log("buttonCreateFragment", true);
+		int fno = getFragmentNumberForView(v);
+		trace.log("buttonCreateFragment", "Fragment #" + fno, true);
 		getMyFragment(v, true); // Just create the fragment; the FragmentManager will manage it.
 		printState();
 	}
@@ -83,6 +84,18 @@ public class MainActivity extends ActivityPrintStates
 		execFtCommand("buttonAddFragmentWithView", v, FTCMD.ADD_WITH_VIEW);
 	}
 	public void buttonAddFragmentWithoutView(View v)		{
+		/*
+		 * NOTE: If you subsequently get the view from the fragment (e.g., using
+		 *       v=fragment.getView()) and add it to a View Group (e.g., vg.addView(v)),
+		 *       then you need to manage that attachment yourself. For example, if you
+		 *       subsequently call fragment_transaction.remove(fragment), that would
+		 *       detach the View from its parent ViewGroup if it knew about it, but in
+		 *       this case it wouldn't, so the View would remain in place. Furthermore,
+		 *       the reference to the View from the fragment would go away, to anything
+		 *       subsequently done with the fragment (e.g., fragment.hide()) would not
+		 *       affect the View. The View and its parent would have become 100% independent
+		 *       of the fragment.
+		 */
 		execFtCommand("buttonAddFragmentWithoutView", v, FTCMD.ADD_WITHOUT_VIEW);
 	}
 	public void buttonRemoveFragment(View v)	{
@@ -121,7 +134,9 @@ public class MainActivity extends ActivityPrintStates
 		execFtCommand("buttonShowFragment", v, FTCMD.SHOW);
 	}
 	public void buttonAddFragmentView(View v)		{
-		trace.log("buttonAddFragmentView");
+		int fno = getFragmentNumberForView(v);
+		trace.log("buttonAddFragmentView", "Fragment #" + fno, true);
+
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
 			trace.log("buttonAddFragmentView", "Fragment does not exist yet.");
@@ -144,7 +159,9 @@ public class MainActivity extends ActivityPrintStates
 		printState();
 	}
 	public void buttonRemoveFragmentView(View v)		{
-		trace.log("buttonRemoveFragmentView");
+		int fno = getFragmentNumberForView(v);
+		trace.log("buttonRemoveFragmentView", "Fragment #" + fno, true);
+
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
 			trace.log("buttonRemoveFragmentView", "Fragment does not exist yet.");
@@ -190,8 +207,8 @@ public class MainActivity extends ActivityPrintStates
 		if (mf == null) {
 			trace.log("printFragmentInfo",
 				String.format(
-					"%s(#%d) not in the FragmentManager. Transient MFs: %s.",
-					ftag, fno, getTransientMfs()));
+					"%s not in FragmentManager. Transient MFs: %s.",
+					ftag, getTransientMfs()));
 			return;
 		}
 		mf.trace();
@@ -203,7 +220,7 @@ public class MainActivity extends ActivityPrintStates
 		while (iter.hasNext()) {
 			String key = iter.next();
 			MyFragment mf = transientMyFragments.get(key);
-			if (!s.equals("")) {s += ", ";}
+			if (!s.equals("")) {s += ",";}
 			s += String.format("%s=%#x", key, mf.hashCode());
 		}
 		return s == null ? "" : s;
@@ -220,7 +237,9 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="SUPPORT METHODS">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
-		trace.log(label, true);
+//	DEL:	String fno = Integer.toString(getFragmentNumberForView(v));
+		int fno = getFragmentNumberForView(v);
+		trace.log(label, "Fragment #" + fno, true);
 		MyFragment mf = getMyFragmentWrapper(v);
 		if (mf == null) {
 			trace.log("execFtCommand",
@@ -359,7 +378,9 @@ public class MainActivity extends ActivityPrintStates
 
 		} else
 			trace.log("getMyFragment()",
-				String.format("Existing fragment in FragmentManager: %s", Trace.getIdHc(mf)));
+				String.format("Existing fragment in FragmentManager: %s(%s)",
+					mf.getMyTag(),
+					Trace.getIdHc(mf)));
 
 		return mf;
 	}

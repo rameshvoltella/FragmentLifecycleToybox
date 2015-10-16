@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <com.barryholroyd.fragmentlifedemo.FldTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/InflatedTextView"
-        android:background="@color/pink_500"
+        style="@style/FldTextViewStyle"
         android:id="@+id/static_textview"
         android:text="Fld TextView"
     />

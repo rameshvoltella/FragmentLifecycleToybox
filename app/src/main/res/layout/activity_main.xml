@@ -46,10 +46,6 @@
             class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/orange_200"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="15dp"
-            android:padding="15dp"
             android:id="@+id/my_fragment_static"
             >
         </fragment>
