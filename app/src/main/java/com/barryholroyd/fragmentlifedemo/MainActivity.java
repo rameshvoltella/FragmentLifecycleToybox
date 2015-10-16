@@ -164,7 +164,7 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonToggleLayoutAndMarginTracing(View v) {
 		trace_layout_and_measure = !trace_layout_and_measure;
 		Button b = (Button) v;
-		b.setText(String.format("LayoutAndMargin: %b", trace_layout_and_measure));
+		b.setText(String.format("Layout & Measure: %b", trace_layout_and_measure));
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
@@ -338,8 +338,8 @@ public class MainActivity extends ActivityPrintStates
 		MyFragment mf = transientMyFragments.get(ftag);
 		if (mf != null) {
 			trace.log("getMyFragment()",
-				String.format("Existing transient fragment (not in FragmentManager): %s",
-					Trace.getIdHc(mf)));
+				String.format("Existing transient fragment (%s not in FragmentManager): %s",
+					mf.getMyTag(), Trace.getIdHc(mf)));
 			return mf;
 		}
 

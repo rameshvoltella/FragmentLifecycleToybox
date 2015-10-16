@@ -12,6 +12,6 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/InflatedTextView"
         android:id="@+id/static_textview"
-        android:text="Static TextView (inflated)"
+        android:text="Static TextView"
     />
 <!--</FrameLayout>-->

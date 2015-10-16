@@ -1,6 +1,7 @@
 package com.barryholroyd.fragmentlifedemo;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -55,30 +56,30 @@ public class FldTextView extends TextView
 		trace.log("onFinishInflate");
 		super.onFinishInflate();
 	}
-//	@Override
-//	public void onLayout(boolean changed, int left, int top, int right, int bottom) {
-//		// TBD: is this o.k.?
-//	    if (MainActivity.trace_layout_and_measure)
-//		    trace.log("onLayout");
-//		super.onLayout(changed, left, top, right, bottom);
-//	}
-//	@Override
-//	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
-//	    if (MainActivity.trace_layout_and_measure)
-//		    trace.log("onMeasure");
-//		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//	}
-//	@Override
-//	public Parcelable onSaveInstanceState() {
-//		trace.log("onSaveInstanceState");
-//		return super.onSaveInstanceState();
-//	}
-//	@Override
-//	public void onRestoreInstanceState(Parcelable state) {
-//		super.onRestoreInstanceState(state);
-//		trace.log("onRestoreInstanceState");
-//	}
+	@Override
+	public void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		// TBD: is this o.k.?
+	    if (MainActivity.trace_layout_and_measure)
+		    trace.log("onLayout");
+		super.onLayout(changed, left, top, right, bottom);
+	}
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
+	    if (MainActivity.trace_layout_and_measure)
+		    trace.log("onMeasure");
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	}
+	@Override
+	public Parcelable onSaveInstanceState() {
+		trace.log("onSaveInstanceState");
+		return super.onSaveInstanceState();
+	}
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+		super.onRestoreInstanceState(state);
+		trace.log("onRestoreInstanceState");
+	}
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
 	public void fldTvTrace() {

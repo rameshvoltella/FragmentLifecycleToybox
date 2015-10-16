@@ -111,7 +111,7 @@ class Trace {
 				log_pane.append("\n");
 		}
 		String leader = String.format("%s %s:", sep, label);
-		String s = String.format("%-32s Data:[%s] Msg:[%s]", leader, data, msg);
+		String s = String.format("%-33s Data:[%s] Msg:[%s]", leader, data, msg);
 		if (log_pane == null)
 			s += " Log Pane:[SKIPPING]";
 		else

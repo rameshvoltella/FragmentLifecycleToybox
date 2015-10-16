@@ -13,6 +13,6 @@
         style="@style/InflatedTextView"
         android:background="@color/pink_500"
         android:id="@+id/static_textview"
-        android:text="Fld TextView (inflated)"
+        android:text="Fld TextView"
     />
 <!--</FrameLayout>-->

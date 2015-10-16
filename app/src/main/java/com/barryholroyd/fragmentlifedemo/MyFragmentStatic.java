@@ -20,19 +20,12 @@ public class MyFragmentStatic extends FragmentPrintStates
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		// For static fragments, the container is always null at this point (verify).
 		TextView tv = (TextView) inflater.inflate(R.layout.static_textview, null, false);
-
 		trace.log("onCreateView()",
 			String.format("MyFragment: fldtv=%s, container=%s",
 				Trace.getIdHc(tv), Trace.getIdHc(container)));
 
 		return tv;
-
-		// DEL:
-//		FrameLayout fl = (FrameLayout) inflater.inflate(
-//			R.layout.static_textview, null, false);
-//		return fl;
 	}
 }
