@@ -76,7 +76,6 @@ public class FldLinearLayout extends LinearLayout
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		if (MainActivity.trace_layout_and_measure)
 			trace.log("onMeasure");
-		// TBD: is this o.k.? I'm not calling setMeasuredDimension().
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 	@Override

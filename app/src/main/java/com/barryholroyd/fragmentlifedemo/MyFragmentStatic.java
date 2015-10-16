@@ -22,13 +22,13 @@ public class MyFragmentStatic extends FragmentPrintStates
 
 		// For static fragments, the container is always null at this point (verify).
 		FrameLayout fl = (FrameLayout) inflater.inflate(
-			R.layout.static_textview_to_inflate, null, false);
+			R.layout.static_textview, null, false);
 
 		// DEL: ?
-//		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
+//		String s = String.format("Inflated static_textview [%s]", Trace.getIdHc(tv));
 //		trace.log("onCreateView()", "New: " + s);
-//		TextView tv = (TextView) inflater.inflate(R.layout.static_textview_to_inflate, null, false);
-//		String s = String.format("Inflated static_textview_to_inflate [%s]", Trace.getIdHc(tv));
+//		TextView tv = (TextView) inflater.inflate(R.layout.static_textview, null, false);
+//		String s = String.format("Inflated static_textview [%s]", Trace.getIdHc(tv));
 //		trace.log("onCreateView()", "New: " + s);
 //		return tv;
 		return fl;

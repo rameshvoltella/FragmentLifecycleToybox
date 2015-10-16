@@ -1,6 +1,5 @@
 package com.barryholroyd.fragmentlifedemo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +52,7 @@ public class MyFragment extends FragmentPrintStates
 				container == null ? "*** <NULL> ***" : Trace.getIdHc(container)));
 
 		FrameLayout fl = (FrameLayout) inflater.inflate(
-			R.layout.fld_text_view_layout, null, false);
+			R.layout.fld_textview, null, false);
 
 		return fl;
 	}
@@ -80,7 +79,6 @@ public class MyFragment extends FragmentPrintStates
 			boolean is_detached = mf.isDetached();
 			int frag_id = mf.getId();
 
-//		DEL:	FldTextView frag_view = (FldTextView) mf.getView();
 			FrameLayout fl = (FrameLayout) mf.getView();
 			String vstring = "<null>";
 			if (fl != null) {
