@@ -47,14 +47,16 @@ public class MyFragment extends FragmentPrintStates
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		// DEL:
+//		FrameLayout fl = (FrameLayout) inflater.inflate(
+//			R.layout.fld_textview, null, false);
+		FldTextView fldtv = (FldTextView) inflater.inflate(R.layout.fld_textview, null, false);
 		trace.log("onCreateView()",
-			String.format("New fragment: container_rid=%s",
-				container == null ? "*** <NULL> ***" : Trace.getIdHc(container)));
+			String.format("MyFragment: fldtv=%s, container=%s",
+				Trace.getIdHc(fldtv), Trace.getIdHc(container)));
 
-		FrameLayout fl = (FrameLayout) inflater.inflate(
-			R.layout.fld_textview, null, false);
-
-		return fl;
+		return fldtv;
 	}
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -79,12 +81,10 @@ public class MyFragment extends FragmentPrintStates
 			boolean is_detached = mf.isDetached();
 			int frag_id = mf.getId();
 
-			FrameLayout fl = (FrameLayout) mf.getView();
-			String vstring = "<null>";
-			if (fl != null) {
-				FldTextView frag_view = (FldTextView) fl.getChildAt(0);
-				vstring = Trace.toStringSimple(frag_view);
-			}
+			FldTextView fldtv = (FldTextView) mf.getView();
+			String vstring = fldtv == null
+				? "<null>"
+				: Trace.toStringSimple(fldtv);
 			String tag = mf.getMyTag();
 			// Object	host_obj	= mf.getHost(); // Requires API 23
 			String s = String.format(
