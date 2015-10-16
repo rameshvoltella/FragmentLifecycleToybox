@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -129,6 +130,11 @@ public class MainActivity extends ActivityPrintStates
 		View view = mf.getView();
 		if (view == null) {
 			trace.log("buttonAddFragmentView", "Fragment does not have a view.");
+			return;
+		}
+		ViewParent vp = view.getParent();
+		if (vp != null) {
+			trace.log("buttonAddFragmentView", "View already has a parent.");
 			return;
 		}
 		int container_id = mf.getContainerId();
