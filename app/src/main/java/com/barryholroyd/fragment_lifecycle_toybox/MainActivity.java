@@ -34,6 +34,7 @@ public class MainActivity extends ActivityPrintStates
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
+	static public boolean trace_print_state        = false;
 
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
@@ -67,9 +68,16 @@ public class MainActivity extends ActivityPrintStates
 		Trace.init(this);
 		trace.log("2. onCreate()", "After setContentView(): Log Pane:[INITIALIZED].");
 
-		Button b = (Button) findViewById(R.id.button_toggle_lamt);
-		String s = trace_layout_and_measure ? "on" : "off";
-		b.setText(String.format("Layout & Measure: %s", s));
+		setButtonLabel("3. onCreate()", "Layout & Measure",
+			trace_layout_and_measure, R.id.button_toggle_lamt);
+		setButtonLabel("4. onCreate()", "Print State",
+			trace_print_state, R.id.button_toggle_print_state);
+	}
+	private void setButtonLabel(String label, String func, boolean toggle, int rid) {
+		String s = toggle ? "on" : "off";
+		trace.log(label, String.format("%s tracing turned %s.", func, s));
+		Button b = (Button) findViewById(rid);
+		b.setText(String.format("%s: %s", func, s));
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -134,21 +142,24 @@ public class MainActivity extends ActivityPrintStates
 	}
 	public void buttonToggleLmTracing(View v) {
 		trace_layout_and_measure = !trace_layout_and_measure;
-		String s = trace_layout_and_measure ? "on" : "off";
-		trace.log("buttonToggleLmTracing",
-			String.format("Layout & Measure tracing turned %s.", s));
-		Button b = (Button) v;
-		b.setText(String.format("Layout & Measure: %s", s));
+		setButtonLabel("buttonToggleLmTracing", "Layout & Measure",
+			trace_layout_and_measure, R.id.button_toggle_lamt);
+	}
+	public void buttonTogglePrintState(View v) {
+		trace_print_state = !trace_print_state;
+		setButtonLabel("buttonTogglePrintState", "Print State",
+			trace_print_state, R.id.button_toggle_print_state);
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
-		trace.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
+		if (! MainActivity.trace_print_state)
+			return;
 
+		trace.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
 		// Print Fragments information
 		printFragmentInfo(1);
 		printFragmentInfo(2);
-
 		// Print Containers information
 		printContainerInfo(R.id.container1);
 		printContainerInfo(R.id.container2);

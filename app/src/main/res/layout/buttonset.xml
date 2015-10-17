@@ -32,13 +32,13 @@
         />
     <Button
         style="@style/SharedStyle.ButtonStyle"
-        android:text="Attach"
-        android:onClick="buttonAttachFragment"
+        android:text="Detach"
+        android:onClick="buttonDetachFragment"
         />
     <Button
         style="@style/SharedStyle.ButtonStyle"
-        android:text="Detach"
-        android:onClick="buttonDetachFragment"
+        android:text="Attach"
+        android:onClick="buttonAttachFragment"
         />
     <Button
         style="@style/SharedStyle.ButtonStyle"

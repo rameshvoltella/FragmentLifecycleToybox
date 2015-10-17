@@ -21,44 +21,54 @@
             <include layout="@layout/buttonset" android:id="@+id/buttonset2"/>
         </LinearLayout>
     </HorizontalScrollView>
-    <LinearLayout
-        android:orientation="horizontal"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_500"
-        android:layout_marginTop="15dp"
-        android:gravity="center_vertical"
         >
-        <Button
-            style="@style/SharedStyle.ButtonStyle"
-            android:id="@+id/button_toggle_lamt"
-            android:onClick="buttonToggleLmTracing"
-            />
-        <TextView
-            style="@style/SharedStyle.CodePaneStyle"
-            android:hint="code hints will appear here"
-            android:id="@+id/code_pane"
-            />
-        <!-- Comment out the following to turn off the static fragment traces. -->
-        <fragment
-            class="com.barryholroyd.fragment_lifecycle_toybox.MyFragmentStatic"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="mf_static"
-            android:id="@+id/my_fragment_static"
+            android:background="@color/green_500"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
             >
-        </fragment>
-        <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
-            style="@style/SharedStyle.FragmentPaneStyle"
-            android:id="@+id/container1"
-            >
-        </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
-        <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
-            style="@style/SharedStyle.FragmentPaneStyle"
-            android:id="@+id/container2"
-            >
-        </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
-    </LinearLayout>
+            <Button
+                style="@style/SharedStyle.ButtonStyle"
+                android:id="@+id/button_toggle_lamt"
+                android:onClick="buttonToggleLmTracing"
+                />
+            <Button
+                style="@style/SharedStyle.ButtonStyle"
+                android:id="@+id/button_toggle_print_state"
+                android:onClick="buttonTogglePrintState"
+                />
+            <TextView
+                style="@style/SharedStyle.CodePaneStyle"
+                android:hint="code hints will appear here"
+                android:id="@+id/code_pane"
+                />
+            <!-- Comment out the following to turn off the static fragment traces. -->
+            <fragment
+                class="com.barryholroyd.fragment_lifecycle_toybox.MyFragmentStatic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="mf_static"
+                android:id="@+id/my_fragment_static"
+                >
+            </fragment>
+            <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
+                style="@style/SharedStyle.FragmentPaneStyle"
+                android:id="@+id/container1"
+                >
+            </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
+            <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
+                style="@style/SharedStyle.FragmentPaneStyle"
+                android:id="@+id/container2"
+                >
+            </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
     <TextView
         style="@style/LogPaneStyle"
         android:layout_marginTop="15dp"
