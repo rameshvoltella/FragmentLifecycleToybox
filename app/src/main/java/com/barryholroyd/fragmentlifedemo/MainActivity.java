@@ -196,7 +196,6 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="SUPPORT METHODS">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
-//	DEL:	String fno = Integer.toString(getFragmentNumberForView(v));
 		int fno = getFragmentNumberForView(v);
 		trace.log(label, "Fragment #" + fno, true);
 		MyFragment mf = getMyFragmentWrapper(v);

@@ -1,5 +1,5 @@
 <resources>
-    <!-- Base application theme. -->
+    <!-- Themes. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -13,6 +13,7 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- Styles. -->
     <style name="ButtonStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -23,14 +24,12 @@
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
-    <!-- TBD: standardize styles. -->
     <style name="CodePaneStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/blue_200</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_margin">5dp</item>
-        <!--<item name="android:layout_margin">5dp</item>-->
         <item name="android:padding">10dp</item>
     </style>
     <style name="StaticTextViewStyle">
@@ -45,7 +44,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/pink_500</item>
-        <!--<item name="android:layout_marginStart">5dp</item>-->
         <item name="android:layout_margin">5dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:padding">4dp</item>
@@ -54,6 +52,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/purple_200</item>
+        <item name="android:layout_margin">5dp</item>
         <item name="android:padding">6dp</item>
     </style>
     <style name="LogPaneStyle">
