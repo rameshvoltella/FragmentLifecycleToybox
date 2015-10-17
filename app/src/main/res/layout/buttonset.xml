@@ -6,47 +6,47 @@
               android:id="@+id/buttonset"
     >
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Create"
         android:onClick="buttonCreateFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Add (include View)"
         android:onClick="buttonAddFragmentWithView"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Add (no View)"
         android:onClick="buttonAddFragmentWithoutView"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Remove"
         android:onClick="buttonRemoveFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Replace"
         android:onClick="buttonReplaceFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Attach"
         android:onClick="buttonAttachFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Detach"
         android:onClick="buttonDetachFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Hide"
         android:onClick="buttonHideFragment"
         />
     <Button
-        style="@style/ButtonStyle"
+        style="@style/SharedStyle.ButtonStyle"
         android:text="Show"
         android:onClick="buttonShowFragment"
         />

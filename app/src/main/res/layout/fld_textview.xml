@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
     <com.barryholroyd.fragmentlifedemo.FldTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        style="@style/FldTextViewStyle"
+        style="@style/SharedStyle.FldTextViewStyle"
         android:id="@+id/static_textview"
         android:text="Fld TextView"
     />

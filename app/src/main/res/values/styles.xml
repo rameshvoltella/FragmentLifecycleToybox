@@ -8,45 +8,34 @@
     </style>
 
     <!-- Styles. -->
-    <style name="ButtonStyle">
+    <style name="SharedStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+    <style name="SharedStyle.ButtonStyle">
         <item name="android:background">@drawable/button_blue_light</item>
         <item name="android:layout_margin">5dp</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
-        <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
-    <style name="CodePaneStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="SharedStyle.CodePaneStyle">
         <item name="android:background">@color/blue_200</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_margin">5dp</item>
         <item name="android:padding">10dp</item>
     </style>
-    <style name="StaticTextViewStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="SharedStyle.StaticTextViewStyle">
         <item name="android:background">@color/purple_200</item>
-        <item name="android:layout_margin">5dp</item>
         <item name="android:padding">10dp</item>
     </style>
-    <style name="FragmentPaneStyle">
+    <style name="SharedStyle.FragmentPaneStyle">
         <item name="android:orientation">vertical</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/pink_500</item>
-        <item name="android:layout_margin">5dp</item>
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@color/pink_500</item>
         <item name="android:padding">4dp</item>
     </style>
-    <style name="FldTextViewStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="SharedStyle.FldTextViewStyle">
         <item name="android:background">@color/purple_200</item>
-        <item name="android:layout_margin">5dp</item>
         <item name="android:padding">6dp</item>
     </style>
     <style name="LogPaneStyle">

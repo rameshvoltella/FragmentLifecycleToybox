@@ -30,12 +30,12 @@
         android:gravity="center_vertical"
         >
         <Button
-            style="@style/ButtonStyle"
+            style="@style/SharedStyle.ButtonStyle"
             android:id="@+id/button_toggle_lamt"
             android:onClick="buttonToggleLmTracing"
             />
         <TextView
-            style="@style/CodePaneStyle"
+            style="@style/SharedStyle.CodePaneStyle"
             android:hint="code hints will appear here"
             android:id="@+id/code_pane"
             />
@@ -49,12 +49,12 @@
             >
         </fragment>
         <com.barryholroyd.fragmentlifedemo.FldLinearLayout
-            style="@style/FragmentPaneStyle"
+            style="@style/SharedStyle.FragmentPaneStyle"
             android:id="@+id/container1"
             >
         </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
         <com.barryholroyd.fragmentlifedemo.FldLinearLayout
-            style="@style/FragmentPaneStyle"
+            style="@style/SharedStyle.FragmentPaneStyle"
             android:id="@+id/container2"
             >
         </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
