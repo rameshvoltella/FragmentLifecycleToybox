@@ -1,4 +1,4 @@
-package com.barryholroyd.fragmentlifedemo;
+package com.barryholroyd.fragment_lifecycle_toybox;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

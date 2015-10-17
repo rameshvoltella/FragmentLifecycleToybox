@@ -41,23 +41,23 @@
             />
         <!-- Comment out the following to turn off the static fragment traces. -->
         <fragment
-            class="com.barryholroyd.fragmentlifedemo.MyFragmentStatic"
+            class="com.barryholroyd.fragment_lifecycle_toybox.MyFragmentStatic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="mf_static"
             android:id="@+id/my_fragment_static"
             >
         </fragment>
-        <com.barryholroyd.fragmentlifedemo.FldLinearLayout
+        <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
             style="@style/SharedStyle.FragmentPaneStyle"
             android:id="@+id/container1"
             >
-        </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
-        <com.barryholroyd.fragmentlifedemo.FldLinearLayout
+        </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
+        <com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout
             style="@style/SharedStyle.FragmentPaneStyle"
             android:id="@+id/container2"
             >
-        </com.barryholroyd.fragmentlifedemo.FldLinearLayout>
+        </com.barryholroyd.fragment_lifecycle_toybox.FldLinearLayout>
     </LinearLayout>
     <TextView
         style="@style/LogPaneStyle"

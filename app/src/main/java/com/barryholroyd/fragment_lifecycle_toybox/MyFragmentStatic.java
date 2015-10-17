@@ -1,10 +1,9 @@
-package com.barryholroyd.fragmentlifedemo;
+package com.barryholroyd.fragment_lifecycle_toybox;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 /**

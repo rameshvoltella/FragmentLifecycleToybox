@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FragmentLifeCycleDemo.iml" filepath="$PROJECT_DIR$/FragmentLifeCycleDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FragmentLifecycleToybox.iml" filepath="$PROJECT_DIR$/FragmentLifecycleToybox.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

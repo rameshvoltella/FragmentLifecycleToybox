@@ -1,4 +1,4 @@
-package com.barryholroyd.fragmentlifedemo;
+package com.barryholroyd.fragment_lifecycle_toybox;
 
 import android.content.Context;
 import android.os.Parcelable;

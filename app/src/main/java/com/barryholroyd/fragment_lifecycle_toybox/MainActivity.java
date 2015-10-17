@@ -1,11 +1,10 @@
-package com.barryholroyd.fragmentlifedemo;
+package com.barryholroyd.fragment_lifecycle_toybox;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
