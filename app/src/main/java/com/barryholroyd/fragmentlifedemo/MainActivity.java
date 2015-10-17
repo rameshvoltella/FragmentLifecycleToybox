@@ -34,7 +34,7 @@ public class MainActivity extends ActivityPrintStates
 	static final private String FRAGTAG2 = "FragTag2";
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
-	static public boolean trace_layout_and_measure = true;
+	static public boolean trace_layout_and_measure = false;
 
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
@@ -59,7 +59,6 @@ public class MainActivity extends ActivityPrintStates
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// DEL: ?
 		trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, null);
 		trace.log("1. onCreate()",
 			String.format(
@@ -145,7 +144,7 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
-		trace.log("printState");
+		trace.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
 
 		// Print Fragments information
 		printFragmentInfo(1);
@@ -154,6 +153,7 @@ public class MainActivity extends ActivityPrintStates
 		// Print Containers information
 		printContainerInfo(R.id.container1);
 		printContainerInfo(R.id.container2);
+		trace.log("[PRINT STATE END]");
 	}
 	private void printFragmentInfo(int fno) {
 		String ftag = null;
@@ -163,14 +163,13 @@ public class MainActivity extends ActivityPrintStates
 		}
 		FragmentManager fm = getFragmentManager();
 		MyFragment mf = (MyFragment) fm.findFragmentByTag(ftag);
-		if (mf == null) {
-			trace.log("printFragmentInfo",
-				String.format(
-					"%s not in FragmentManager. Transient MFs: %s.",
-					ftag, getTransientMfs()));
-			return;
-		}
-		mf.trace();
+
+		trace.log("printFragmentInfo",
+			String.format("Fragment %s: %s in FragmentManager.",
+				ftag, mf == null ? "not" : ""));
+
+		if (mf != null)
+			mf.trace();
 	}
 	private String getTransientMfs() {
 		Set keys = transientMyFragments.keySet();
@@ -179,7 +178,7 @@ public class MainActivity extends ActivityPrintStates
 		while (iter.hasNext()) {
 			String key = iter.next();
 			MyFragment mf = transientMyFragments.get(key);
-			if (!s.equals("")) {s += ",";}
+			if (!s.equals("")) {s += ", ";}
 			s += String.format("%s=%#x", key, mf.hashCode());
 		}
 		return s == null ? "" : s;
@@ -191,6 +190,7 @@ public class MainActivity extends ActivityPrintStates
 			trace.log("printContainerInfo", msg);
 			throw new IllegalStateException(msg);
 		}
+		trace.log("printContainerInfo");
 		fld_ll.fldLlTrace();
 	}
 	//</editor-fold>

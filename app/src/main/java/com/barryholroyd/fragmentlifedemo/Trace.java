@@ -13,13 +13,13 @@ class Trace {
 	//<editor-fold desc="FIELDS">
 	static final public String LOGTAG_APPLC         = "FLD APP LC      ";
 	static final public String LOGTAG_APP           = "FLD APP         ";
-	static final public String LOGTAG_FRAGLC        = "FLD FRAGMENT LC ";    // tmp
+	static final public String LOGTAG_FRAGLC        = "FLD FRAG LC     ";    // tmp
 	static final public String LOGTAG_FRAGLC_STAT   = "FLD FRAG LC STAT";
 	static final public String LOGTAG_FRAGLC_DYN    = "FLD FRAG LC DYN ";
-	static final public String LOGTAG_FRAG          = "FLD FRAGMENT    ";    // tmp
+	static final public String LOGTAG_FRAG          = "FLD FRAG        ";    // tmp
 	static final public String LOGTAG_FRAG_STAT     = "FLD FRAG STAT   ";
 	static final public String LOGTAG_FRAG_DYN      = "FLD FRAG DYN    ";
-	static final public String LOGTAG_VIEWGROUP     = "FLD VIEW GROUP  ";
+	static final public String LOGTAG_VIEWGROUP     = "FLD VWGRP       ";
 	static final public String LOGTAG_VIEW          = "FLD VIEW        ";
 
 	static final public String SEP_APPLC		= "|";
@@ -110,13 +110,23 @@ class Trace {
 			if (log_pane != null)
 				log_pane.append("\n");
 		}
+
 		String leader = String.format("%s %s:", sep, label);
-		String s = String.format("%-33s Data:[%s] Msg:[%s]", leader, data, msg);
+		if (data.equals("") || msg.equals("")) {
+			writeline(leader, String.format("Data:[%s] Msg:[%s]", data, msg));
+		}
+		else {
+			writeline(leader, String.format("Data:[%s]", data));
+			writeline(leader, String.format("Msg:[%s]",  msg));
+		}
+	}
+	private void writeline(String leader, String s) {
+		String msg = String.format("%-33s %s", leader, s);
 		if (log_pane == null)
-			s += " Log Pane:[SKIPPING]";
+			msg += " Log Pane:[SKIPPING]";
 		else
-			log_pane.append(s + '\n');
-		bh.log(s);
+			log_pane.append(msg + '\n');
+		bh.log(msg);
 	}
 	//</editor-fold>
 }
