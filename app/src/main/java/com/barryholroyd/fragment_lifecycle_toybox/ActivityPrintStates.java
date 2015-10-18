@@ -12,9 +12,9 @@ public class ActivityPrintStates extends Activity
   // Called at the start of the full lifetime.
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    runme("onCreate()");
     super.onCreate(savedInstanceState);
     // Initialize Activity and inflate the UI.
-    runme("onCreate()");
   }
 
   // Called after onCreate has finished, use to restore UI state

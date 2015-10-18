@@ -12,12 +12,18 @@
         />
     <Button
         style="@style/SharedStyle.ButtonStyle"
-        android:text="Add (include View)"
+        android:text="Retain Instance"
+        android:onClick="buttonRetainInstance"
+        android:id="@+id/button_toggle_retain_instance"
+        />
+    <Button
+        style="@style/SharedStyle.ButtonStyle"
+        android:text="Add (ViewInCntnr)"
         android:onClick="buttonAddFragmentWithView"
         />
     <Button
         style="@style/SharedStyle.ButtonStyle"
-        android:text="Add (no View)"
+        android:text="Add (! ViewInCntnr)"
         android:onClick="buttonAddFragmentWithoutView"
         />
     <Button

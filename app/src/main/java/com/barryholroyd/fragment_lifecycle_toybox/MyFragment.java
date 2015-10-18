@@ -25,7 +25,6 @@ public class MyFragment extends FragmentPrintStates
 	public MyFragment() {
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
-//		super.setLogTag(Trace.LOGTAG_FRAGLC_DYN);
 		trace.log("MyFragment()", String.format("MyFragment(NEW)=%s",
 			Trace.classAtHc(this)));
 	}
@@ -33,6 +32,7 @@ public class MyFragment extends FragmentPrintStates
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(MainActivity.retain_instance);
 		if (savedInstanceState != null) {
 			ftag            = savedInstanceState.getString(ARG_FTAG);
 			container_rid   = savedInstanceState.getInt(ARG_CONTAINER_RID);
@@ -47,10 +47,9 @@ public class MyFragment extends FragmentPrintStates
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		FldTextView fldtv = (FldTextView) inflater.inflate(R.layout.fld_textview, null, false);
 		trace.log("onCreateView()",
-			String.format("MyFragment: fldtv=%s, container=%s",
-				Trace.classAtHc(fldtv), Trace.classAtHc(container)));
+			String.format("MyFragment: container=%s", Trace.classAtHc(container)));
+		FldTextView fldtv = (FldTextView) inflater.inflate(R.layout.fld_textview, null, false);
 		return fldtv;
 	}
 	@Override
@@ -76,10 +75,16 @@ public class MyFragment extends FragmentPrintStates
 			FldTextView fldtv = (FldTextView) mf.getView();
 			String viewstr = fldtv == null
 				? "<null>" : Trace.classAtHc(fldtv);
+			/*
+			 * Note: isDetached() returns true only if the fragment has been explicitly
+			 *       detached by a call to ft.detach(). When a fragment is first created,
+			 *       isDetached() returns false, even though the fragment isn't yet attached
+			 *       to an Activity, because it hasn't been explicity detached with ft.detach().
+			 */
 			String s = String.format(
-				"getId()=%#x C@HC=%s Tag=%s Added=%b Attached=%b View=%s",
+				"getId()=%#x C@HC=%s Tag=%s Added=%b ExplicitlyDetached=%b View=%s",
 				mf.getId(), Trace.classAtHc(mf),
-				mf.getMyTag(), mf.isAdded(), !mf.isDetached(), viewstr
+				mf.getMyTag(), mf.isAdded(), mf.isDetached(), viewstr
 			);
 			return s;
 		}

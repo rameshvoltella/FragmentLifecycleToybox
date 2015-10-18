@@ -23,11 +23,11 @@ class Trace {
 	static final public String LOGTAG_VIEW          = "FLD VIEW        ";
 
 	static final public String SEP_APPLC		= "|";
-	static final public String SEP_APP		    = "  |";
+	static final public String SEP_APP		    = "|";
+	static final public String SEP_FRAGMENTLC	= "  |";
+	static final public String SEP_FRAGMENT     = "  |";
 	static final public String SEP_VIEWGROUP    = "    |";
-	static final public String SEP_FRAGMENTLC	= "      |";
-	static final public String SEP_FRAGMENT     = "        |";
-	static final public String SEP_VIEW         = "          |";
+	static final public String SEP_VIEW         = "    |";
 
 	private Bhlogger    bh   = null;
 	private Info        info = null;
