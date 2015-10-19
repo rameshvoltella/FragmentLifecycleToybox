@@ -35,13 +35,14 @@
             >
             <Button
                 style="@style/SharedStyle.ButtonStyle"
-                android:id="@+id/button_toggle_lamt"
-                android:onClick="buttonToggleLmTracing"
+                android:id="@+id/button_toggle_print_state"
+                android:text="Print State"
+                android:onClick="buttonPrintState"
                 />
             <Button
                 style="@style/SharedStyle.ButtonStyle"
-                android:id="@+id/button_toggle_print_state"
-                android:onClick="buttonTogglePrintState"
+                android:id="@+id/button_toggle_lamt"
+                android:onClick="buttonToggleLmTracing"
                 />
             <TextView
                 style="@style/SharedStyle.CodePaneStyle"

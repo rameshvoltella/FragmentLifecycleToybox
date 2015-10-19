@@ -41,8 +41,8 @@ public class MyFragment extends FragmentPrintStates
 
 	public String getMyTag() { return ftag; } // distinct from Fragment.getTag()
 	public int getContainerId() { return container_rid; }
-	public void trace() {
-		trace.log("MyFragment");
+	public void tracePs() {
+		MainActivity.tracePs.log("MyFragment");
 	}
 
 	@Override

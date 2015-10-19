@@ -90,7 +90,7 @@ public class FldLinearLayout extends LinearLayout
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
 	public void fldLlTrace() {
-		trace.log("FldLinearLayout");
+		MainActivity.tracePs.log("FldLinearLayout");
 		traceChildren();
 	}
 	private void traceChildren() {

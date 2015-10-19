@@ -21,6 +21,7 @@ class Trace {
 	static final public String LOGTAG_FRAG_DYN      = "FLD FRAG DYN    ";
 	static final public String LOGTAG_VIEWGROUP     = "FLD VWGRP       ";
 	static final public String LOGTAG_VIEW          = "FLD VIEW        ";
+	static final public String LOGTAG_PRINT_STATE   = "FLD PRINT STATE ";
 
 	static final public String SEP_APPLC		= "|";
 	static final public String SEP_APP		    = "|";
@@ -28,6 +29,7 @@ class Trace {
 	static final public String SEP_FRAGMENT     = "  |";
 	static final public String SEP_VIEWGROUP    = "    |";
 	static final public String SEP_VIEW         = "    |";
+	static final public String SEP_PRINTSTATE   = "STATE: ";
 
 	private Bhlogger    bh   = null;
 	private Info        info = null;

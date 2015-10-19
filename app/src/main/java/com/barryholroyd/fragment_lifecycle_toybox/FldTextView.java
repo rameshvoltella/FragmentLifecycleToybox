@@ -81,7 +81,7 @@ public class FldTextView extends TextView
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
 	public void fldTvTrace() {
-		trace.log("FldTextView");
+		MainActivity.tracePs.log("FldTextView");
 	}
 	class InfoImpl implements Trace.Info
 	{

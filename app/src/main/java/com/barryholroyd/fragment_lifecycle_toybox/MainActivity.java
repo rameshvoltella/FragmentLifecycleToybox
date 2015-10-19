@@ -26,6 +26,7 @@ public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
+	public static Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINTSTATE, null);
 	private FragmentManager fm = getFragmentManager();
 
 	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
@@ -36,7 +37,6 @@ public class MainActivity extends ActivityPrintStates
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
-	static public boolean trace_print_state        = false;
 	static public boolean retain_instance         = false; // default for fragment initialization
 
 	private enum FTCMD {    // FragmentTransaction commands
@@ -72,37 +72,48 @@ public class MainActivity extends ActivityPrintStates
 		trace.log("2. onCreate()", "After setContentView(): Log Pane:[INITIALIZED].");
 		setButtonLabelItem("3. onCreate()", "Layout & Measure",
 			trace_layout_and_measure, R.id.button_toggle_lamt);
-		setButtonLabelItem("4. onCreate()", "Print State",
-			trace_print_state, R.id.button_toggle_print_state);
-		setButtonLabelRetainInstance("5. onCreate()", R.id.buttonset1);
-		setButtonLabelRetainInstance("6. onCreate()", R.id.buttonset2);
+		setButtonLabelRetainInstanceBlank("4. onCreate()", 1, R.id.buttonset1);
+		setButtonLabelRetainInstanceBlank("5. onCreate()", 2, R.id.buttonset2);
 	}
 	private void setButtonLabelItem(String label, String func, boolean toggle, int rid) {
 		Button b = (Button) findViewById(rid);
 		setButtonLabel(b, label, func, toggle);
-	}
-	private void setButtonLabelRetainInstance(String label, int rid) {
-		ViewGroup vg = (ViewGroup) findViewById(rid);
-		Button b = (Button) vg.findViewById(R.id.button_toggle_retain_instance);
-		setButtonLabel(b, label, "Retain Instance", retain_instance);
-	}
-	private void setButtonLabelRetainInstance(String label, View v, boolean toggle) {
-		Button b = (Button) v;
-		setButtonLabel(b, label, "Retain Instance", toggle);
-
 	}
 	private void setButtonLabel(Button b, String label, String func, boolean toggle) {
 		String s = toggle ? "on" : "off";
 		trace.log(label, String.format("%s turned %s.", func, s));
 		b.setText(String.format("%s: %s", func, s));
 	}
+
+	private void setButtonLabelRetainInstanceBlank(String label, int fno, int rid) {
+		MyFragment mf = getMyFragmentFromNumber(fno);
+		ViewGroup vg = (ViewGroup) findViewById(rid); // button set
+		Button b = (Button) vg.findViewById(R.id.button_toggle_retain_instance);
+		if (mf == null)
+			b.setText("Retain Instance");
+		else
+			setButtonLabelRetainInstance(label, b, mf.getRetainInstance());
+	}
+	private void setButtonLabelRetainInstance(String label, Button b, boolean toggle) {
+		setButtonLabel(b, label, "Retain Instance", toggle);
+	}
+	private void setButtonLabelRetainInstance(String label, int fno, boolean toggle) {
+		int rid = 0;
+		switch (fno) {
+			case 1: rid = R.id.buttonset1; break;
+			case 2: rid = R.id.buttonset2; break;
+		}
+		ViewGroup vg = (ViewGroup) findViewById(rid); // button set
+		Button b = (Button) vg.findViewById(R.id.button_toggle_retain_instance);
+		setButtonLabel(b, label, "Retain Instance", toggle);
+	}
+
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
 	public void buttonCreateFragment(View v)	{
 		int fno = getFragmentNumberForView(v);
 		trace.log("buttonCreateFragment", "Fragment #" + fno, true);
 		getMyFragmentFromView(v, true); // Just create the fragment; the FragmentManager will manage it.
-		printState();
 	}
 	public void buttonRetainInstance(View v) {
 		MyFragment mf = getMyFragmentWrapper(v);
@@ -113,7 +124,8 @@ public class MainActivity extends ActivityPrintStates
 		}
 		boolean ri = !mf.getRetainInstance();
 		mf.setRetainInstance(ri);
-		setButtonLabelRetainInstance("buttonRetainInstance", v, ri);
+		Button b = (Button) v;
+		setButtonLabelRetainInstance("buttonRetainInstance", b, ri);
 	}
 	public void buttonAddFragmentWithView(View v)		{
 		execFtCommand("buttonAddFragmentWithView", v, FTCMD.ADD_WITH_VIEW);
@@ -173,30 +185,25 @@ public class MainActivity extends ActivityPrintStates
 		setButtonLabelItem("buttonToggleLmTracing", "Layout & Measure",
 			trace_layout_and_measure, R.id.button_toggle_lamt);
 	}
-	public void buttonTogglePrintState(View v) {
-		trace_print_state = !trace_print_state;
-		setButtonLabelItem("buttonTogglePrintState", "Print State",
-			trace_print_state, R.id.button_toggle_print_state);
+	public void buttonPrintState(View v) {
+		printState();
 	}
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
-		if (! MainActivity.trace_print_state)
-			return;
-
-		trace.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
+		tracePs.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
 		// Print Fragments information
 		printFragmentInfo(1);
 		printFragmentInfo(2);
 		// Print Containers information
 		printContainerInfo(R.id.container1);
 		printContainerInfo(R.id.container2);
-		trace.log("[PRINT STATE END]");
+		tracePs.log("[PRINT STATE END]");
 	}
 	private void printFragmentInfo(int fno) {
-		MyFragment mf = getMyFragmentFromNumber(fno, false);
+		MyFragment mf = getMyFragmentFromNumber(fno);
 		if (mf != null)
-			mf.trace();
+			mf.tracePs();
 	}
 	private String getTransientMfs() {
 		Set keys = transientMyFragments.keySet();
@@ -214,10 +221,10 @@ public class MainActivity extends ActivityPrintStates
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(cid);
 		if (fld_ll == null) {
 			String msg = String.format("No container for id: %#x!", cid);
-			trace.log("printContainerInfo", msg);
+			tracePs.log("printContainerInfo", msg);
 			throw new IllegalStateException(msg);
 		}
-		trace.log("printContainerInfo");
+		tracePs.log("printContainerInfo");
 		fld_ll.fldLlTrace();
 	}
 	//</editor-fold>
@@ -306,7 +313,6 @@ public class MainActivity extends ActivityPrintStates
 		}
 		ft.commit();
 		fm.executePendingTransactions();
-		printState();
 	}
 	private MyFragment getMyFragmentWrapper(View v) {
 		// Handled the case where the fragment doesn't exist yet and isn't created.
@@ -325,23 +331,26 @@ public class MainActivity extends ActivityPrintStates
 		LinearLayout ll = (LinearLayout) button.getParent();
 		int button_parent_id = ll.getId();
 		int container_rid = 0;
+		int fno = 0;
 
 		String ftag = null;
 		switch (button_parent_id) {
 			case R.id.buttonset1:
+				fno  = 1;
 				ftag = FRAGTAG1;
 				container_rid = R.id.container1;
 				break;
 			case R.id.buttonset2:
+				fno  = 2;
 				ftag = FRAGTAG2;
 				container_rid = R.id.container2;
 				break;
 			default:
 				throw new IllegalStateException("Bad container id: " + button_parent_id);
 		}
-		return getMf(ftag, container_rid, create);
+		return getMf(fno, ftag, container_rid, create);
 	}
-	private MyFragment getMyFragmentFromNumber(int fno, boolean create) {
+	private MyFragment getMyFragmentFromNumber(int fno) {
 		String ftag = null;
 		int container_rid = 0;
 		switch (fno) {
@@ -356,9 +365,9 @@ public class MainActivity extends ActivityPrintStates
 			default:
 				throw new IllegalStateException("Bad fragment number: " + fno);
 		}
-		return getMf(ftag, container_rid, create);
+		return getMf(fno, ftag, container_rid, false);
 	}
-	private MyFragment getMf(String ftag, int container_rid, boolean create) {
+	private MyFragment getMf(int fno, String ftag, int container_rid, boolean create) {
 		MyFragment mf = transientMyFragments.get(ftag);
 		if (mf != null) {
 			trace.log("getMyFragment()",
@@ -380,6 +389,9 @@ public class MainActivity extends ActivityPrintStates
 						"NEW fragment created: %s (%s) ",
 						mf.getMyTag(), Trace.classAtHc(mf)));
 				trace.logCode("mf = new MyFragment();");
+
+				setButtonLabelRetainInstance("getMF", fno, mf.getRetainInstance());
+
 			}
 			else
 				trace.log("getMyFragment()", "No fragment yet.");
