@@ -251,10 +251,6 @@ public class FragmentPrintStates extends Fragment
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-	  // DEL:
-//	String msg = String.format("Tag=%s C@HC=%s Retained=%b",
-//        getTag(), Trace.classAtHc(this), getRetainInstance());
-
 	  MyFragment mf = (MyFragment) this;
 	  FldTextView fldtv = (FldTextView) mf.getView();
 	  String viewstr = fldtv == null
