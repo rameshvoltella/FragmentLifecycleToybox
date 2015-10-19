@@ -12,8 +12,9 @@ import android.widget.TextView;
 public class FldTextView extends TextView
 {
 	//<editor-fold desc="FIELDS">
-	private Trace trace = null;
-	private Trace tracePs = null;
+	private InfoImpl  info  = new InfoImpl(this);
+	private Trace trace = new Trace(Trace.LOGTAG_VIEW, Trace.SEP_VIEW, info);
+	private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
 	public FldTextView(Context context) {
@@ -33,9 +34,6 @@ public class FldTextView extends TextView
 
 	private void cinit() {
 		setId(generateViewId());
-		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(Trace.LOGTAG_VIEW, Trace.SEP_VIEW, info);
-		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("FldTextView(NEW)");
 	}
 
@@ -95,7 +93,7 @@ public class FldTextView extends TextView
 		public String getData() {
 			FldTextView fld_tv = (FldTextView) obj;
 			String s = String.format(
-				"FldTextView: getId()=%#x, C@HC=%s",
+				"FldTextView: Id=%#x, C@HC=%s",
 				fld_tv.getId(),  Trace.classAtHc(fld_tv));
 			return s;
 		}

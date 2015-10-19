@@ -11,12 +11,11 @@ import android.widget.TextView;
  */
 public class MyFragmentStatic extends FragmentPrintStates
 {
-	private Trace trace = null;
+	InfoImpl  info  = new InfoImpl(this);
+	private Trace trace = new Trace(Trace.LOGTAG_FRAGLC_STAT, Trace.SEP_FRAGMENT, info);
+	private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 
 	public MyFragmentStatic() {
-		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(Trace.LOGTAG_FRAGLC_STAT, Trace.SEP_FRAGMENT, info);
-//	DEL:	super.setLogTag(Trace.LOGTAG_FRAGLC_STAT);
 		trace.log("MyFragmentStatic()", String.format("MyFragmentStatic(NEW)=%s",
 			Trace.classAtHc(this)));
 	}
@@ -48,7 +47,7 @@ class InfoImpl implements Trace.Info
 		String tag = mfs.getTag();
 		if (tag == null) tag = "<null>";
 		String s = String.format(
-			"getId()=%#x C@HC=%s Tag=%s Added=%b Attached=%b View=%s",
+			"Id=%#x C@HC=%s Tag=%s Added=%b Attached=%b View=%s",
 			mfs.getId(), Trace.classAtHc(mfs),
 			tag, mfs.isAdded(), !mfs.isDetached(), fldtv_class_at_hc
 		);

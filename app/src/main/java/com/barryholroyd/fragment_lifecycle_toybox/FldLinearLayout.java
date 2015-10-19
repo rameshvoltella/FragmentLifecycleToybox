@@ -12,8 +12,9 @@ import android.widget.LinearLayout;
 public class FldLinearLayout extends LinearLayout
 {
 	//<editor-fold desc="FIELDS">
-	private Trace trace = null;
-	private Trace tracePs = null;
+	private InfoImpl  info  = new InfoImpl(this);
+	private Trace trace = new Trace(Trace.LOGTAG_VIEWGROUP, Trace.SEP_VIEWGROUP, info);
+	private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
@@ -30,9 +31,6 @@ public class FldLinearLayout extends LinearLayout
 		init();
 	}
 	private void init() {
-		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(Trace.LOGTAG_VIEWGROUP, Trace.SEP_VIEWGROUP, info);
-		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("FldLinearLayout(NEW)");
 		debug(5); // int is depth of indentation
 	}
@@ -114,7 +112,7 @@ public class FldLinearLayout extends LinearLayout
 		public String getData() {
 			FldLinearLayout fld_ll = (FldLinearLayout) obj;
 			String s = String.format(
-				"FldLinearLayout: getId()=%#x, C@HC=%s",
+				"FldLinearLayout: Id=%#x, C@HC=%s",
 				fld_ll.getId(),  Trace.classAtHc(fld_ll));
 			return s;
 		}

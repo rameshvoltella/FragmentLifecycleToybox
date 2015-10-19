@@ -21,8 +21,9 @@ import android.view.ViewGroup;
 public class FragmentPrintStates extends Fragment
 {
   //<editor-fold desc="FIELDS">
-  private Trace trace = new Trace(Trace.LOGTAG_FRAGLC, Trace.SEP_FRAGMENTLC, null);
+	private Trace trace = new Trace(Trace.LOGTAG_FRAGLC, Trace.SEP_FRAGMENTLC, null);
   //</editor-fold>
+
   public void setLogTag(String s) {
 	  trace.setLogTag(s);
   }
@@ -250,8 +251,21 @@ public class FragmentPrintStates extends Fragment
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-	String msg = String.format("C@HC=%s", Trace.classAtHc(this));
-	trace.log(label, msg);
+	  // DEL:
+//	String msg = String.format("Tag=%s C@HC=%s Retained=%b",
+//        getTag(), Trace.classAtHc(this), getRetainInstance());
+
+	  MyFragment mf = (MyFragment) this;
+	  FldTextView fldtv = (FldTextView) mf.getView();
+	  String viewstr = fldtv == null
+		  ? "<null>" : Trace.classAtHc(fldtv);
+	  String msg = String.format(
+		  "Tag=%s Id=%#x C@HC=%s Rtnd=%b Added=%b XplctDtch=%b Vw=%s",
+		  mf.getMyTag(), mf.getId(), Trace.classAtHc(mf),
+		  mf.getRetainInstance(), mf.isAdded(), mf.isDetached(), viewstr
+	  );
+
+	  trace.log(label, msg);
   }
   //</editor-fold>
 }

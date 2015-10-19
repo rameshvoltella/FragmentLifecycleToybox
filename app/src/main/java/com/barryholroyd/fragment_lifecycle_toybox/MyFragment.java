@@ -13,10 +13,11 @@ public class MyFragment extends FragmentPrintStates
 	static final private String ARG_FTAG            = "ARG_FTAG";
 	static final private String ARG_CONTAINER_RID   = "ARG_CONTAINER_RID";
 
-	private Trace   trace           = null;
-	private Trace   tracePs         = null;
-	private String  ftag            = "<null>";// Needed until tag is added in a transaction.
-	private int     container_rid   = 0;
+	private InfoImpl  info            = new InfoImpl(this);
+	private Trace     trace           = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
+	private Trace     tracePs         = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
+	private String    ftag            = "<null>";// Needed until tag is added in a transaction.
+	private int       container_rid   = 0;
 
 	public void init(String ftag, int container_rid) {
 		this.ftag = ftag;
@@ -24,9 +25,6 @@ public class MyFragment extends FragmentPrintStates
 	}
 
 	public MyFragment() {
-		InfoImpl  info  = new InfoImpl(this);
-		trace = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
-		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("MyFragment()", String.format("MyFragment(NEW)=%s",
 			Trace.classAtHc(this)));
 	}
@@ -34,7 +32,6 @@ public class MyFragment extends FragmentPrintStates
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(MainActivity.retain_instance);
 		if (savedInstanceState != null) {
 			ftag            = savedInstanceState.getString(ARG_FTAG);
 			container_rid   = savedInstanceState.getInt(ARG_CONTAINER_RID);
@@ -46,7 +43,6 @@ public class MyFragment extends FragmentPrintStates
 	public void tracePs() {
 		tracePs.log("MyFragment");
 	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		trace.log("onCreateView()",
@@ -61,8 +57,7 @@ public class MyFragment extends FragmentPrintStates
 		outState.putString(ARG_FTAG, ftag);
 		outState.putInt(ARG_CONTAINER_RID, container_rid);
 	}
-
-	class InfoImpl implements Trace.Info
+	public class InfoImpl implements Trace.Info
 	{
 		// "this", from the object that created this instance
 		private Object obj = null;
@@ -84,9 +79,9 @@ public class MyFragment extends FragmentPrintStates
 			 *       to an Activity, because it hasn't been explicity detached with ft.detach().
 			 */
 			String s = String.format(
-				"getId()=%#x C@HC=%s Tag=%s Added=%b ExplicitlyDetached=%b View=%s",
-				mf.getId(), Trace.classAtHc(mf),
-				mf.getMyTag(), mf.isAdded(), mf.isDetached(), viewstr
+				"Tag=%s Id=%#x C@HC=%s Rtnd=%b Added=%b XplctDtch=%b Vw=%s",
+				mf.getMyTag(), mf.getId(), Trace.classAtHc(mf),
+				mf.getRetainInstance(), mf.isAdded(), mf.isDetached(), viewstr
 			);
 			return s;
 		}
