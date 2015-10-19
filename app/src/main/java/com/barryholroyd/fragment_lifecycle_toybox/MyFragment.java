@@ -14,6 +14,7 @@ public class MyFragment extends FragmentPrintStates
 	static final private String ARG_CONTAINER_RID   = "ARG_CONTAINER_RID";
 
 	private Trace   trace           = null;
+	private Trace   tracePs         = null;
 	private String  ftag            = "<null>";// Needed until tag is added in a transaction.
 	private int     container_rid   = 0;
 
@@ -25,6 +26,7 @@ public class MyFragment extends FragmentPrintStates
 	public MyFragment() {
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
+		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("MyFragment()", String.format("MyFragment(NEW)=%s",
 			Trace.classAtHc(this)));
 	}
@@ -42,7 +44,7 @@ public class MyFragment extends FragmentPrintStates
 	public String getMyTag() { return ftag; } // distinct from Fragment.getTag()
 	public int getContainerId() { return container_rid; }
 	public void tracePs() {
-		MainActivity.tracePs.log("MyFragment");
+		tracePs.log("MyFragment");
 	}
 
 	@Override

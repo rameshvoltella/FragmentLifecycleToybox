@@ -13,6 +13,7 @@ public class FldLinearLayout extends LinearLayout
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
+	private Trace tracePs = null;
 
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
@@ -31,6 +32,7 @@ public class FldLinearLayout extends LinearLayout
 	private void init() {
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_VIEWGROUP, Trace.SEP_VIEWGROUP, info);
+		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("FldLinearLayout(NEW)");
 		debug(5); // int is depth of indentation
 	}
@@ -90,7 +92,7 @@ public class FldLinearLayout extends LinearLayout
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
 	public void fldLlTrace() {
-		MainActivity.tracePs.log("FldLinearLayout");
+		tracePs.log("FldLinearLayout");
 		traceChildren();
 	}
 	private void traceChildren() {

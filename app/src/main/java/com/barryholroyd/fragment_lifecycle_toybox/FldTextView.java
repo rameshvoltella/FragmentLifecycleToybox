@@ -13,6 +13,7 @@ public class FldTextView extends TextView
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
+	private Trace tracePs = null;
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
 	public FldTextView(Context context) {
@@ -34,6 +35,7 @@ public class FldTextView extends TextView
 		setId(generateViewId());
 		InfoImpl  info  = new InfoImpl(this);
 		trace = new Trace(Trace.LOGTAG_VIEW, Trace.SEP_VIEW, info);
+		tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 		trace.log("FldTextView(NEW)");
 	}
 
@@ -81,7 +83,7 @@ public class FldTextView extends TextView
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
 	public void fldTvTrace() {
-		MainActivity.tracePs.log("FldTextView");
+		tracePs.log("FldTextView");
 	}
 	class InfoImpl implements Trace.Info
 	{

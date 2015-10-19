@@ -26,7 +26,7 @@ public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = null;
-	public static Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINTSTATE, null);
+	public static Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, null);
 	private FragmentManager fm = getFragmentManager();
 
 	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
