@@ -32,8 +32,8 @@ public class MainActivity extends ActivityPrintStates
 	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
 	private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
 
-	static final private String FRAGTAG1 = "FragTag1";
-	static final private String FRAGTAG2 = "FragTag2";
+	static final protected String FRAGTAG1 = "FragTag1";
+	static final protected String FRAGTAG2 = "FragTag2";
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
@@ -70,8 +70,8 @@ public class MainActivity extends ActivityPrintStates
 		trace.log("2. onCreate()", "After setContentView(): Log Pane:[INITIALIZED].");
 		setButtonLabelItem("3. onCreate()", "Layout & Measure",
 			trace_layout_and_measure, R.id.button_toggle_lamt);
-		setButtonLabelRetainInstanceBlank("4. onCreate()", 1, R.id.buttonset1);
-		setButtonLabelRetainInstanceBlank("5. onCreate()", 2, R.id.buttonset2);
+		setButtonLabelRetainInstanceBlank("4. onCreate()", 1);
+		setButtonLabelRetainInstanceBlank("5. onCreate()", 2);
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -153,6 +153,22 @@ public class MainActivity extends ActivityPrintStates
 	public void buttonPrintState(View v) {
 		printState();
 	}
+	public void buttonReset(View v) {
+		trace.log("Resetting (fully destroying all fragments).");
+		destroyFragment(FRAGTAG1);
+		destroyFragment(FRAGTAG2);
+		transientMyFragments.clear();
+	}
+	private void destroyFragment(String ftag) {
+		FragmentManager fm = getFragmentManager();
+		MyFragment mf = (MyFragment) fm.findFragmentByTag(ftag);
+		if (mf == null)
+			return;
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.remove(mf);
+		ft.commit();
+		fm.executePendingTransactions();
+	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTON LABELS">
 	private void setButtonLabelItem(String label, String func, boolean toggle, int rid) {
@@ -164,9 +180,10 @@ public class MainActivity extends ActivityPrintStates
 		trace.log(label, s + '.');
 		b.setText(s);
 	}
-	private void setButtonLabelRetainInstanceBlank(String label, int fno, int rid) {
-		MyFragment mf = getMyFragmentFromNumber(fno);
-		ViewGroup vg = (ViewGroup) findViewById(rid); // button set
+	private void setButtonLabelRetainInstanceBlank(String label, int fno) {
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		MyFragment mf = getMyFragment(fid_set, false, true);
+		ViewGroup vg = (ViewGroup) findViewById(fid_set.getButtonSetRid()); // button set
 		Button b = (Button) vg.findViewById(R.id.button_toggle_retain_instance);
 		if (mf == null)
 			b.setText("Retain Instance");
@@ -177,21 +194,17 @@ public class MainActivity extends ActivityPrintStates
 		setButtonLabel(b, label, "Retain Instance", toggle);
 	}
 	private void setButtonLabelRetainInstance(String label, int fno, boolean toggle) {
-		int rid = 0;
-		switch (fno) {
-			case 1: rid = R.id.buttonset1; break;
-			case 2: rid = R.id.buttonset2; break;
-		}
+		int rid = FragmentIdSet.newInstanceFromFragmentNumber(fno).getButtonSetRid();
 		ViewGroup vg = (ViewGroup) findViewById(rid); // button set
 		Button b = (Button) vg.findViewById(R.id.button_toggle_retain_instance);
 		setButtonLabel(b, label, "Retain Instance", toggle);
 	}
 	//</editor-fold>
-	//<editor-fold desc="PRINT METHODS">
+	//<editor-fold desc="METHODS: PRINT">
 	private void printState() {
-		tracePs.log("[PRINT STATE START]");
-		tracePs.log("1. printState", String.format("Transient MFs: %s.", getTransientMfs()));
-		tracePs.log("2. printState", String.format("FragmentManager MFs: %s.", getFragmentManagerMfs()));
+		tracePs.log("[PRINT STATE START]", true);
+		tracePs.log("1. printState", String.format("Transient MFs: %s", getTransientMfs()));
+		tracePs.log("2. printState", String.format("FragmentManager MFs: %s", getFragmentManagerMfs()));
 		// Print Fragments information
 		printFragmentInfo(1);
 		printFragmentInfo(2);
@@ -201,7 +214,8 @@ public class MainActivity extends ActivityPrintStates
 		tracePs.log("[PRINT STATE END]");
 	}
 	private void printFragmentInfo(int fno) {
-		MyFragment mf = getMyFragmentFromNumber(fno);
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		MyFragment mf = getMyFragment(fid_set, false, true);
 		if (mf != null)
 			mf.tracePs();
 	}
@@ -218,17 +232,20 @@ public class MainActivity extends ActivityPrintStates
 		return s == null ? "" : s;
 	}
 	private String getFragmentManagerMfs() {
-		String s = "";
-		s += getFragmentManagerMf(s, FRAGTAG1);
-		s += getFragmentManagerMf(s, FRAGTAG2);
-		return s;
+		StringBuffer sb = new StringBuffer();
+		getFragmentManagerMf(sb, 1);
+		getFragmentManagerMf(sb, 2);
+		return sb.toString();
 	}
-	private String getFragmentManagerMf(String s, String tag) {
-		if (fragmentInFragmentManager(tag, null)) {
-			if (!s.equals("")) {s += ", ";}
-			s += tag;
+	private void getFragmentManagerMf(StringBuffer sb, int fno) {
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		FragmentManager fm = getFragmentManager();
+		MyFragment mf = (MyFragment) fm.findFragmentByTag(fid_set.getFragmentTag());
+		if (mf != null){
+			if (sb.length() > 0)
+				sb.append(", ");
+			sb.append(String.format("%s=%#x", fid_set.getFragmentTag(), mf.hashCode()));
 		}
-		return s;
 	}
 
 	private void printContainerInfo(int cid) {
@@ -242,7 +259,7 @@ public class MainActivity extends ActivityPrintStates
 		fld_ll.fldLlTrace();
 	}
 	//</editor-fold>
-	//<editor-fold desc="SUPPORT METHODS">
+	//<editor-fold desc="METHODS: SUPPORT">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
 		int fno = getFragmentNumberForView(v);
 		trace.log(label, "Fragment #" + fno, true);
@@ -327,6 +344,22 @@ public class MainActivity extends ActivityPrintStates
 		ft.commit();
 		fm.executePendingTransactions();
 	}
+	private boolean fragmentInFragmentManager(String ftag, String label) {
+		if (fm.findFragmentByTag(ftag) != null) {
+			if (label != null) {
+				trace.log(label,
+					String.format("%s is already in the FragmentManager.", ftag));
+			}
+			return true;
+		}
+		return false;
+	}
+	private int getFragmentNumberForView(View v) {
+		int buttonset_rid = ((ViewGroup)v.getParent()).getId(); // button set that the button is in
+		return FragmentIdSet.newInstanceFromButtonsetRid(buttonset_rid).getFragmentNumber();
+	}
+//</editor-fold>
+	//<editor-fold desc="METHODS: GET MY FRAGMENT">
 	private MyFragment getMyFragmentWrapper(View v) {
 		// Handled the case where the fragment doesn't exist yet and isn't created.
 		MyFragment mf = getMyFragmentFromView(v, false);
@@ -338,55 +371,26 @@ public class MainActivity extends ActivityPrintStates
 		return mf;
 	}
 	private MyFragment getMyFragmentFromView(View v, boolean create) {
-
 		// Get the fragment corresponding to the button's container.
 		Button button = (Button) v;
 		LinearLayout ll = (LinearLayout) button.getParent();
-		int button_parent_id = ll.getId();
-		int container_rid = 0;
-		int fno = 0;
-
-		String ftag = null;
-		switch (button_parent_id) {
-			case R.id.buttonset1:
-				fno  = 1;
-				ftag = FRAGTAG1;
-				container_rid = R.id.container1;
-				break;
-			case R.id.buttonset2:
-				fno  = 2;
-				ftag = FRAGTAG2;
-				container_rid = R.id.container2;
-				break;
-			default:
-				throw new IllegalStateException("Bad container id: " + button_parent_id);
-		}
-		return getMf(fno, ftag, container_rid, create);
+		int buttonset_rid = ll.getId();
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromButtonsetRid(buttonset_rid);
+		return getMyFragment(fid_set, create, false);
 	}
 	private MyFragment getMyFragmentFromNumber(int fno) {
-		String ftag = null;
-		int container_rid = 0;
-		switch (fno) {
-			case 1:
-				ftag = FRAGTAG1;
-				container_rid = R.id.container1;
-				break;
-			case 2:
-				ftag = FRAGTAG2;
-				container_rid = R.id.container2;
-				break;
-			default:
-				throw new IllegalStateException("Bad fragment number: " + fno);
-		}
-		return getMf(fno, ftag, container_rid, false);
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		return getMyFragment(fid_set, false, false);
 	}
-	private MyFragment getMf(int fno, String ftag, int container_rid, boolean create) {
+	private MyFragment getMyFragment(FragmentIdSet fid_set, boolean create, boolean silent) {
+		String ftag = fid_set.getFragmentTag();
 		MyFragment mf = transientMyFragments.get(ftag);
 		if (mf != null) {
-			trace.log("getMf()",
+			gmfLog("getMyFragment()",
 				String.format(
 					"EXISTING fragment retrieved from transient storage: %s (%s).",
-					mf.getMyTag(), Trace.classAtHc(mf)));
+					mf.getMyTag(), Trace.classAtHc(mf)),
+				silent);
 			return mf;
 		}
 
@@ -395,44 +399,94 @@ public class MainActivity extends ActivityPrintStates
 		if (mf == null) {
 			if (create) {
 				mf = new MyFragment();
-				mf.init(ftag, container_rid);
+				mf.init(ftag, fid_set.getContainerRid());
 				transientMyFragments.put(ftag, mf);
-				trace.log("getMf()",
+				gmfLog("getMyFragment()",
 					String.format(
 						"NEW fragment created: %s (%s) ",
-						mf.getMyTag(), Trace.classAtHc(mf)));
+						mf.getMyTag(), Trace.classAtHc(mf)),
+				silent);
 				trace.logCode("mf = new MyFragment();");
 
-				setButtonLabelRetainInstance("getMF", fno, mf.getRetainInstance());
+				setButtonLabelRetainInstance(
+					"getMyFragment", fid_set.getFragmentNumber(), mf.getRetainInstance());
 
 			}
 			else
-				trace.log("getMf()", "No fragment yet.");
+				gmfLog("getMyFragment()", "No fragment yet.", silent);
 
 		} else
-			trace.log("getMf()",
+			gmfLog("getMyFragment()",
 				String.format("Existing fragment in FragmentManager: %s(%s)",
 					mf.getMyTag(),
-					Trace.classAtHc(mf)));
+					Trace.classAtHc(mf)),
+				silent);
 
 		return mf;
 	}
-	private int getFragmentNumberForView(View v) {
-		switch (((ViewGroup)v.getParent()).getId()) {
-			case R.id.buttonset1:   return 1;
-			case R.id.buttonset2:   return 2;
-			default:                return 0;
-		}
+	private void gmfLog(String label, String msg, boolean silent) {
+		if (!silent)
+			trace.log(label, msg);
 	}
-	private boolean fragmentInFragmentManager(String ftag, String label) {
-		if (fm.findFragmentByTag(ftag) != null) {
-			if (label != null) {
-				trace.log(label,
-					String.format("%s is already in the FragmentManager.", ftag));
-			}
-			return true;
-		}
-		return false;
-	}
-//</editor-fold>
+	//</editor-fold>
 }
+
+//<editor-fold desc="CLASS: FragmentIdSet">
+class FragmentIdSet
+{
+	// All four IDs are needed in different contexts at different times.
+	//<editor-fold desc="FIELDS">
+	private int    fragment_no;     // Simple id for the fragment.
+	private int    buttonset_rid;   // Button set corresponding to a fragment.
+	private int    container_rid;   // Container the fragment should be put into.
+	private String fragment_tag;    // Tag for the fragment in the FragmentManager.
+	//</editor-fold>
+	//<editor-fold desc="CONSTRUCTORS">
+	private FragmentIdSet(int fno, int brid, int crid, String ftag) {
+		fragment_no   = fno;
+		buttonset_rid = brid;
+		container_rid = crid;
+		fragment_tag  = ftag;
+	}
+	//</editor-fold>
+	//<editor-fold desc="GETTERS">
+	int getButtonSetRid()   { return buttonset_rid; }
+	int getContainerRid()   { return container_rid; }
+	int getFragmentNumber() { return fragment_no; }
+	String getFragmentTag() { return fragment_tag; }
+	//</editor-fold>
+	//<editor-fold desc="METHODS: NEW INSTANCE">
+	static FragmentIdSet newInstanceFromFragmentNumber(int fno) {
+		return makeFragmentIdSet(fno);
+	}
+	static FragmentIdSet newInstanceFromButtonsetRid(int brid) {
+		switch (brid) {
+			case R.id.buttonset1: return makeFragmentIdSet(1);
+			case R.id.buttonset2: return makeFragmentIdSet(2);
+			default:              throw new IllegalStateException("Bad button set rid: " + brid);
+		}
+	}
+	static FragmentIdSet newInstanceFromContainerRid(int crid) {
+		switch (crid) {
+			case R.id.container1: return makeFragmentIdSet(1);
+			case R.id.container2: return makeFragmentIdSet(2);
+			default:              throw new IllegalStateException("Bad container rid: " + crid);
+		}
+	}
+	static FragmentIdSet newInstanceFromFragmentTag(String tag) {
+		switch (tag) {
+			case MainActivity.FRAGTAG1:  return makeFragmentIdSet(1);
+			case MainActivity.FRAGTAG2:  return makeFragmentIdSet(2);
+			default: throw new IllegalStateException("Bad fragment tag: " + tag);
+		}
+	}
+	static private FragmentIdSet makeFragmentIdSet(int fno) {
+		switch (fno) {
+			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG1);
+			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG2);
+			default: throw new IllegalStateException("Bad fragment number: " + fno);
+		}
+	}
+	//</editor-fold>
+}
+//</editor-fold>
