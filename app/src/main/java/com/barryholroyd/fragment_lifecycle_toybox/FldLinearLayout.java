@@ -36,16 +36,18 @@ public class FldLinearLayout extends LinearLayout
 	}
 	//</editor-fold>
 	//<editor-fold desc="OVERRIDES: VIEW GROUP">
-	@Override
-	public void onViewAdded(View child) {
-		trace.log("onViewAdded");
-		super.onViewAdded(child);
-	}
-	@Override
-	public void onViewRemoved(View child) {
-		trace.log("onViewRemoved");
-		super.onViewRemoved(child);
-	}
+	// API: 23
+//	@Override
+//	public void onViewAdded(View child) {
+//		trace.log("onViewAdded");
+//		super.onViewAdded(child);
+//	}
+	// API: 23
+//	@Override
+//	public void onViewRemoved(View child) {
+//		trace.log("onViewRemoved");
+//		super.onViewRemoved(child);
+//	}
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		if (MainActivity.trace_layout_and_measure)

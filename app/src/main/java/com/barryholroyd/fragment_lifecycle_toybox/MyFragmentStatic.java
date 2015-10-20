@@ -47,7 +47,7 @@ class InfoImpl implements Trace.Info
 		String tag = mfs.getTag();
 		if (tag == null) tag = "<null>";
 		String s = String.format(
-			"Id=%#x C@HC=%s Tag=%s Added=%b Attached=%b View=%s",
+			"Id=%#x C@HC=%s Tg=%s Added=%b Attached=%b View=%s",
 			mfs.getId(), Trace.classAtHc(mfs),
 			tag, mfs.isAdded(), !mfs.isDetached(), fldtv_class_at_hc
 		);

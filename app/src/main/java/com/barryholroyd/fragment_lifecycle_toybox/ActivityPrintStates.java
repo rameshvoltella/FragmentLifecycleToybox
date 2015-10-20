@@ -12,47 +12,47 @@ public class ActivityPrintStates extends Activity
   // Called at the start of the full lifetime.
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    // Initialize Activity and inflate the UI.
     runme("onCreate()");
     super.onCreate(savedInstanceState);
-    // Initialize Activity and inflate the UI.
   }
 
   // Called after onCreate has finished, use to restore UI state
   @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    super.onRestoreInstanceState(savedInstanceState);
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
     // Will only be called if the Activity has been 
     // killed by the system since it was last visible.
     runme("onRestoreInstanceState()");
+    super.onRestoreInstanceState(savedInstanceState);
   }
 
   // Called before subsequent visible lifetimes
   // for an activity process.
   @Override
   protected void onRestart(){
-    super.onRestart();
     // Load changes knowing that the Activity has already
     // been visible within this process.
     runme("onRestart()");
+    super.onRestart();
   }
 
   // Called at the start of the visible lifetime.
   @Override
   protected void onStart(){
-    super.onStart();
     // Apply any required UI change now that the Activity is visible.
     runme("onStart()");
+    super.onStart();
   }
 
   // Called at the start of the active lifetime.
   @Override
   protected void onResume(){
-    super.onResume();
     // Resume any paused UI updates, threads, or processes required
     // by the Activity but suspended when it was inactive.
     runme("onResume()");
+    super.onResume();
   }
 
   // Called to save UI state changes at the
@@ -63,8 +63,8 @@ public class ActivityPrintStates extends Activity
     // This bundle will be passed to onCreate and 
     // onRestoreInstanceState if the process is
     // killed and restarted by the run time.
-    super.onSaveInstanceState(savedInstanceState);
     runme("onSaveInstanceState()");
+    super.onSaveInstanceState(savedInstanceState);
   }
 
   // Called at the end of the active lifetime.
@@ -73,8 +73,8 @@ public class ActivityPrintStates extends Activity
     // Suspend UI updates, threads, or CPU intensive processes
     // that don't need to be updated when the Activity isn't
     // the active foreground Activity.
-    super.onPause();
     runme("onPause()");
+    super.onPause();
   }
 
   // Called at the end of the visible lifetime.
@@ -84,8 +84,8 @@ public class ActivityPrintStates extends Activity
     // that aren't required when the Activity isn't visible.
     // Persist all edits or state changes
     // as after this call the process is likely to be killed.
-    super.onStop();
     runme("onStop()");
+    super.onStop();
   }
 
   // Sometimes called at the end of the full lifetime.
@@ -93,8 +93,8 @@ public class ActivityPrintStates extends Activity
   protected void onDestroy(){
     // Clean up any resources including ending threads,
     // closing database connections etc.
-    super.onDestroy();
     runme("onDestroy()");
+    super.onDestroy();
   }
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">

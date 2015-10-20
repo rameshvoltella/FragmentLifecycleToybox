@@ -29,7 +29,7 @@ class Trace {
 	static final public String SEP_FRAGMENT     = "  |";
 	static final public String SEP_VIEWGROUP    = "    |";
 	static final public String SEP_VIEW         = "    |";
-	static final public String SEP_PRINT_STATE = "STATE: ";
+	static final public String SEP_PRINT_STATE  = "STATE:";
 
 	private Bhlogger    bh   = null;
 	private Info        info = null;

@@ -189,7 +189,9 @@ public class MainActivity extends ActivityPrintStates
 	//</editor-fold>
 	//<editor-fold desc="PRINT METHODS">
 	private void printState() {
-		tracePs.log("[PRINT STATE START]", String.format("Transient MFs: %s.", getTransientMfs()));
+		tracePs.log("[PRINT STATE START]");
+		tracePs.log("1. printState", String.format("Transient MFs: %s.", getTransientMfs()));
+		tracePs.log("2. printState", String.format("FragmentManager MFs: %s.", getFragmentManagerMfs()));
 		// Print Fragments information
 		printFragmentInfo(1);
 		printFragmentInfo(2);
@@ -215,6 +217,20 @@ public class MainActivity extends ActivityPrintStates
 		}
 		return s == null ? "" : s;
 	}
+	private String getFragmentManagerMfs() {
+		String s = "";
+		s += getFragmentManagerMf(s, FRAGTAG1);
+		s += getFragmentManagerMf(s, FRAGTAG2);
+		return s;
+	}
+	private String getFragmentManagerMf(String s, String tag) {
+		if (fragmentInFragmentManager(tag, null)) {
+			if (!s.equals("")) {s += ", ";}
+			s += tag;
+		}
+		return s;
+	}
+
 	private void printContainerInfo(int cid) {
 		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(cid);
 		if (fld_ll == null) {
@@ -243,7 +259,6 @@ public class MainActivity extends ActivityPrintStates
 		 *   executePendingTransactions" exception the next time we enter this method. Because
 		 *   of that, we have to catch exceptional conditions in advance and live with any
 		 *   unexpected exceptions (i.e., the app will crash).
-		 *
 		 * TBD: find some way to deal with the recursive executePendingTransactions error.
 		 */
 
@@ -271,14 +286,14 @@ public class MainActivity extends ActivityPrintStates
 		switch(cmd) {
 			case ADD_WITHOUT_VIEW:
 				trace.logCode("ft.add(mf, ftag);");
-				if (fragmentInFragmentManager(label, ftag))
+				if (fragmentInFragmentManager(ftag, label))
 					return;
 				ft.add(mf, ftag);
 				transientMyFragments.remove(ftag);
 				break;
 			case ADD_WITH_VIEW:
 				trace.logCode("ft.add(cid, mf, ftag);");
-				if (fragmentInFragmentManager(label, ftag))
+				if (fragmentInFragmentManager(ftag, label))
 					return;
 				ft.add(cid, mf, ftag);
 				transientMyFragments.remove(ftag);
@@ -409,10 +424,12 @@ public class MainActivity extends ActivityPrintStates
 			default:                return 0;
 		}
 	}
-	private boolean fragmentInFragmentManager(String label, String ftag) {
+	private boolean fragmentInFragmentManager(String ftag, String label) {
 		if (fm.findFragmentByTag(ftag) != null) {
-			trace.log(label,
-				String.format("%s is already in the FragmentManager.", ftag));
+			if (label != null) {
+				trace.log(label,
+					String.format("%s is already in the FragmentManager.", ftag));
+			}
 			return true;
 		}
 		return false;

@@ -79,7 +79,7 @@ public class MyFragment extends FragmentPrintStates
 			 *       to an Activity, because it hasn't been explicity detached with ft.detach().
 			 */
 			String s = String.format(
-				"Tag=%s Id=%#x C@HC=%s Rtnd=%b Added=%b XplctDtch=%b Vw=%s",
+				"Tg=%s Id=%#x C@HC=%s Rtnd=%b Added=%b XplctDtch=%b Vw=%s",
 				mf.getMyTag(), mf.getId(), Trace.classAtHc(mf),
 				mf.getRetainInstance(), mf.isAdded(), mf.isDetached(), viewstr
 			);
