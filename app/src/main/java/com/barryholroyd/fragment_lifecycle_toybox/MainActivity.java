@@ -325,6 +325,25 @@ public class MainActivity extends ActivityPrintStates
 				trace.logCode("ft.replace(cid, mf, ftag);");
 				break;
 			case DETACH:
+				/*
+				 * There appears to be a bug in ft.detach() code. It allows you to detach
+				 *   (isDatch() will return true) even if you haven't yet been added to
+				 *   the FragmentManager (e.g., via ft.add()). If you subsequentl call
+				 *   ft.attach(), it will (under the covers) then run ft.add(), silently
+				 *   adding you to the FragmentManager. However, it will do so without
+				 *   specifying a tag, since it apparently assumes that you already have
+				 *   one, if you wanted one. After that, if you run one of the "ADD"
+				 *   commands above, the check for the fragment already being in the
+				 *   FragmentManager will fail (because the fragment didn't have the
+				 *   necessary tag when it was entered) and the subsequent ft.add() will
+				 *   throw an Illegal State exception, indicating that you have already added
+				 *   the fragment. So we have to check for the fragment already being in the
+				 *   FragmentManager here manually, rather than relying on ft.detach() to do so.
+				 */
+				if (! fragmentInFragmentManager(ftag, label)) {
+					trace.logCode("Skipping ft.detach(): not added yet.");
+					return;
+				}
 				ft.detach(mf);
 				trace.logCode("ft.detach(mf);");
 				break;
