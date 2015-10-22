@@ -105,7 +105,6 @@ class Trace {
 		writelog(sep, label, data, msg, newline);
 	}
 	//</editor-fold>
-
 	//<editor-fold desc="METHODS: PRINT">
 	static public void printViewGroupHierarchy(int icnt, ViewGroup vg) {
 		printView(icnt, "ViewGroup", vg);
@@ -147,7 +146,6 @@ class Trace {
 		writeline_ps(indent_str, msg);
 	}
 	//</editor-fold>
-
 	//<editor-fold desc="PRIVATE METHODS">
 	static private void initTypeface(Activity a, TextView tv) {
 		Typeface myTypeface = Typeface.MONOSPACE;
