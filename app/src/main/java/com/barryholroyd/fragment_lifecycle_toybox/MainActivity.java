@@ -26,17 +26,18 @@ public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, null);
-	private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, null);
-	private FragmentManager fm = getFragmentManager();
+	//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, null);
 
 	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
-	private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
+	static private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
 
 	static final protected String FRAGTAG1 = "FragTag1";
 	static final protected String FRAGTAG2 = "FragTag2";
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
+
+	static private FragmentManager fm = null;
 
 	private enum FTCMD {    // FragmentTransaction commands
 		ADD_WITHOUT_VIEW("ADD_WITHOUT_VIEW"),
@@ -61,6 +62,7 @@ public class MainActivity extends ActivityPrintStates
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		fm = getFragmentManager();
 		trace.log("1. onCreate()",
 			String.format(
 				"Before setContentView(): R.id.buttonset1=%#x, R.id.buttonset2=%#x",
@@ -200,65 +202,6 @@ public class MainActivity extends ActivityPrintStates
 		setButtonLabel(b, label, "Retain Instance", toggle);
 	}
 	//</editor-fold>
-	//<editor-fold desc="METHODS: PRINT">
-	private void printState() {
-		tracePs.log("[PRINT STATE START]", true);
-		tracePs.log("1. printState", String.format("Transient MFs: %s", getTransientMfs()));
-		tracePs.log("2. printState", String.format("FragmentManager MFs: %s", getFragmentManagerMfs()));
-		// Print Fragments information
-		printFragmentInfo(1);
-		printFragmentInfo(2);
-		// Print Containers information
-		printContainerInfo(R.id.container1);
-		printContainerInfo(R.id.container2);
-		tracePs.log("[PRINT STATE END]");
-	}
-	private void printFragmentInfo(int fno) {
-		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
-		MyFragment mf = getMyFragment(fid_set, false, true);
-		if (mf != null)
-			mf.tracePs();
-	}
-	private String getTransientMfs() {
-		Set keys = transientMyFragments.keySet();
-		Iterator<String> iter = keys.iterator();
-		String s = "";
-		while (iter.hasNext()) {
-			String key = iter.next();
-			MyFragment mf = transientMyFragments.get(key);
-			if (!s.equals("")) {s += ", ";}
-			s += String.format("%s=%#x", key, mf.hashCode());
-		}
-		return s == null ? "" : s;
-	}
-	private String getFragmentManagerMfs() {
-		StringBuffer sb = new StringBuffer();
-		getFragmentManagerMf(sb, 1);
-		getFragmentManagerMf(sb, 2);
-		return sb.toString();
-	}
-	private void getFragmentManagerMf(StringBuffer sb, int fno) {
-		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
-		FragmentManager fm = getFragmentManager();
-		MyFragment mf = (MyFragment) fm.findFragmentByTag(fid_set.getFragmentTag());
-		if (mf != null){
-			if (sb.length() > 0)
-				sb.append(", ");
-			sb.append(String.format("%s=%#x", fid_set.getFragmentTag(), mf.hashCode()));
-		}
-	}
-
-	private void printContainerInfo(int cid) {
-		FldLinearLayout fld_ll = (FldLinearLayout) findViewById(cid);
-		if (fld_ll == null) {
-			String msg = String.format("No container for id: %#x!", cid);
-			tracePs.log("printContainerInfo", msg);
-			throw new IllegalStateException(msg);
-		}
-		tracePs.log("printContainerInfo");
-		fld_ll.fldLlTrace();
-	}
-	//</editor-fold>
 	//<editor-fold desc="METHODS: SUPPORT">
 	private void execFtCommand(String label, View v, FTCMD cmd) {
 		int fno = getFragmentNumberForView(v);
@@ -378,6 +321,46 @@ public class MainActivity extends ActivityPrintStates
 		return FragmentIdSet.newInstanceFromButtonsetRid(buttonset_rid).getFragmentNumber();
 	}
 //</editor-fold>
+
+	public void printState() {
+		Trace.psLog(0, "[PRINT STATE START]");
+		printFragmentManagers(1);
+		printFragments(1);
+		printViewGroupHierarchy(1);
+		Trace.psLog(0, "[PRINT STATE END]");
+	}
+	private void printFragmentManagers(int icnt) {
+		Trace.psLog(icnt, "FragmentManagers");
+		icnt++;
+		Trace.psLog(icnt, String.format("Transient  FMs: %s", MainActivity.getTransientMfs()));
+		Trace.psLog(icnt, String.format("Persistent MFs: %s", MainActivity.getFragmentManagerMfs()));
+	}
+	private void printFragments(int icnt) {
+		Trace.psLog(icnt, "Fragments");
+		icnt++;
+		printFragmentInfo(icnt, 1);
+		printFragmentInfo(icnt, 2);
+	}
+	private void printViewGroupHierarchy(int icnt) {
+		int cid = R.id.container1;
+		ViewGroup vg = (ViewGroup) findViewById(cid);
+		if (vg == null) {
+			String msg = String.format("No container for id: %#x!", cid);
+			throw new IllegalStateException(msg);
+		}
+		Trace.printViewGroupHierarchy(icnt, vg);
+	}
+
+	private void printFragmentInfo(int icnt, int fno) {
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		MyFragment mf = getMyFragment(fid_set, false, true);
+		if (mf != null) {
+			String s = mf.getData();
+			Trace.psLog(icnt, s);
+		}
+	}
+
+
 	//<editor-fold desc="METHODS: GET MY FRAGMENT">
 	private MyFragment getMyFragmentWrapper(View v) {
 		// Handled the case where the fragment doesn't exist yet and isn't created.
@@ -447,6 +430,33 @@ public class MainActivity extends ActivityPrintStates
 		if (!silent)
 			trace.log(label, msg);
 	}
+	static public String getTransientMfs() {
+		Set keys = transientMyFragments.keySet();
+		Iterator<String> iter = keys.iterator();
+		String s = "";
+		while (iter.hasNext()) {
+			String key = iter.next();
+			MyFragment mf = transientMyFragments.get(key);
+			if (!s.equals("")) {s += ", ";}
+			s += String.format("%s=%#x", key, mf.hashCode());
+		}
+		return s == null ? "" : s;
+	}
+	static public String getFragmentManagerMfs() {
+		StringBuffer sb = new StringBuffer();
+		getFragmentManagerMf(sb, 1);
+		getFragmentManagerMf(sb, 2);
+		return sb.toString();
+	}
+	static private void getFragmentManagerMf(StringBuffer sb, int fno) {
+		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
+		MyFragment mf = (MyFragment) fm.findFragmentByTag(fid_set.getFragmentTag());
+		if (mf != null){
+			if (sb.length() > 0)
+				sb.append(", ");
+			sb.append(String.format("%s=%#x", fid_set.getFragmentTag(), mf.hashCode()));
+		}
+	}
 	//</editor-fold>
 }
 
@@ -487,8 +497,8 @@ class FragmentIdSet
 	}
 	static FragmentIdSet newInstanceFromContainerRid(int crid) {
 		switch (crid) {
-			case R.id.container1: return makeFragmentIdSet(1);
-			case R.id.container2: return makeFragmentIdSet(2);
+			case R.id.container2: return makeFragmentIdSet(1);
+			case R.id.container3: return makeFragmentIdSet(2);
 			default:              throw new IllegalStateException("Bad container rid: " + crid);
 		}
 	}
@@ -501,8 +511,8 @@ class FragmentIdSet
 	}
 	static private FragmentIdSet makeFragmentIdSet(int fno) {
 		switch (fno) {
-			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG1);
-			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG2);
+			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container2, MainActivity.FRAGTAG1);
+			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container3, MainActivity.FRAGTAG2);
 			default: throw new IllegalStateException("Bad fragment number: " + fno);
 		}
 	}

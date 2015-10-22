@@ -3,6 +3,8 @@ package com.barryholroyd.fragment_lifecycle_toybox;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
@@ -29,8 +31,11 @@ class Trace {
 	static final public String SEP_FRAGMENT     = "  |";
 	static final public String SEP_VIEWGROUP    = "    |";
 	static final public String SEP_VIEW         = "    |";
-	static final public String SEP_PRINT_STATE  = "STATE:";
+	static final public String SEP_PRINT_STATE  = "STATE";
 
+	static final public String INDENT_PRINT_STATE = "  ";
+
+	static private Bhlogger    bhps = new Bhlogger(LOGTAG_PRINT_STATE);
 	private Bhlogger    bh   = null;
 	private Info        info = null;
 	private String      sep  = null;
@@ -100,6 +105,49 @@ class Trace {
 		writelog(sep, label, data, msg, newline);
 	}
 	//</editor-fold>
+
+	//<editor-fold desc="METHODS: PRINT">
+	static public void printViewGroupHierarchy(int icnt, ViewGroup vg) {
+		printView(icnt, "ViewGroup", vg);
+		icnt++;
+		int child_cnt = vg.getChildCount();
+		for (int i = 0 ; i < child_cnt ; i++) {
+			View v = vg.getChildAt(i);
+			try {
+				ViewGroup vg_new = (ViewGroup) v;
+				printViewGroupHierarchy(icnt, vg_new);
+			}
+			catch (ClassCastException cce) {
+				printView(icnt, "View", v);
+			}
+		}
+	}
+	static private void printView(int icnt, String view_type, View v) {
+		String tag;
+		Object obj = v.getTag();
+		try {
+			tag = (String) obj;
+			if (tag == null)
+				tag = "<null>";
+		}
+		catch (ClassCastException cce) {
+			tag = "<null>";
+		}
+		String cahc = String.format("%-30s", Trace.classAtHc(v) + ',');
+		String vtype = String.format("%-11s", view_type + ':');
+		psLog(icnt,
+			  String.format("%s getId=%#x C@HC=%s Tag=%s",
+				vtype, v.getId(), cahc, tag));
+	}
+
+	static public void psLog(int icnt, String msg) {
+		String indent_str = "";
+		for (int i = 0 ; i < icnt ; i++)
+			indent_str += INDENT_PRINT_STATE;
+		writeline_ps(indent_str, msg);
+	}
+	//</editor-fold>
+
 	//<editor-fold desc="PRIVATE METHODS">
 	static private void initTypeface(Activity a, TextView tv) {
 		Typeface myTypeface = Typeface.MONOSPACE;
@@ -115,15 +163,22 @@ class Trace {
 
 		String leader = String.format("%s %s:", sep, label);
 		if (data.equals("") || msg.equals("")) {
-			writeline(leader, String.format("Data:[%s] Msg:[%s]", data, msg));
+			writeline_log(bh, leader, String.format("Data:[%s] Msg:[%s]", data, msg));
 		}
 		else {
-			writeline(leader, String.format("Data:[%s]", data));
-			writeline(leader, String.format("Msg:[%s]",  msg));
+			writeline_log(bh, leader, String.format("Data:[%s]", data));
+			writeline_log(bh, leader, String.format("Msg:[%s]", msg));
 		}
 	}
-	private void writeline(String leader, String s) {
+	static private void writeline_log(Bhlogger bh, String leader, String s) {
 		String msg = String.format("%-33s %s", leader, s);
+		writeline(bh, msg);
+	}
+	static private void writeline_ps(String indent, String msg) {
+		String msg2 = String.format("%s: %s %s", SEP_PRINT_STATE, indent, msg);
+		writeline(bhps, msg2);
+	}
+	static private void writeline(Bhlogger bh, String msg) {
 		if (log_pane == null)
 			msg += " Log Pane:[SKIPPING]";
 		else

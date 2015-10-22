@@ -15,7 +15,7 @@ public class MyFragment extends FragmentPrintStates
 
 	private InfoImpl  info            = new InfoImpl(this);
 	private Trace     trace           = new Trace(Trace.LOGTAG_FRAG_DYN, Trace.SEP_FRAGMENT, info);
-	private Trace     tracePs         = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
+	//	DEL: private Trace     tracePs         = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 	private String    ftag            = "<null>";// Needed until tag is added in a transaction.
 	private int       container_rid   = 0;
 
@@ -23,6 +23,8 @@ public class MyFragment extends FragmentPrintStates
 		this.ftag = ftag;
 		this.container_rid = container_rid;
 	}
+
+	public String getData() { return info.getData(); }
 
 	public MyFragment() {
 		trace.log("MyFragment()", String.format("MyFragment(NEW)=%s",
@@ -40,9 +42,9 @@ public class MyFragment extends FragmentPrintStates
 
 	public String getMyTag() { return ftag; } // distinct from Fragment.getTag()
 	public int getContainerId() { return container_rid; }
-	public void tracePs() {
-		tracePs.log("MyFragment");
-	}
+//DEL:	public void tracePs() {
+//		tracePs.log("MyFragment");
+//	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		trace.log("onCreateView()",
@@ -69,19 +71,17 @@ public class MyFragment extends FragmentPrintStates
 		public String getData() {
 			MyFragment mf = (MyFragment) obj;
 			// Object	host_obj	= mf.getHost(); // Requires API 23
-			FldTextView fldtv = (FldTextView) mf.getView();
-			String viewstr = fldtv == null
-				? "<null>" : Trace.classAtHc(fldtv);
 			/*
 			 * Note: isDetached() returns true only if the fragment has been explicitly
 			 *       detached by a call to ft.detach(). When a fragment is first created,
 			 *       isDetached() returns false, even though the fragment isn't yet attached
-			 *       to an Activity, because it hasn't been explicity detached with ft.detach().
+			 *       to an Activity, because it hasn't been explicitly detached with ft.detach().
 			 */
 			String s = String.format(
-				"Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b Vw=%s",
+				"Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b View=%s",
 				mf.getMyTag(), mf.getId(), Trace.classAtHc(mf),
-				mf.getRetainInstance(), mf.isAdded(), mf.isDetached(), viewstr
+				mf.getRetainInstance(), mf.isAdded(), mf.isDetached(),
+				Trace.classAtHc(mf.getView())
 			);
 			return s;
 		}

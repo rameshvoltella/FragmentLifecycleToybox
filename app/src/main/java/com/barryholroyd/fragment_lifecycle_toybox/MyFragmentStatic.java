@@ -13,7 +13,7 @@ public class MyFragmentStatic extends FragmentPrintStates
 {
 	InfoImpl  info  = new InfoImpl(this);
 	private Trace trace = new Trace(Trace.LOGTAG_FRAGLC_STAT, Trace.SEP_FRAGMENT, info);
-	private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
+	//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 
 	public MyFragmentStatic() {
 		trace.log("MyFragmentStatic()", String.format("MyFragmentStatic(NEW)=%s",
@@ -42,14 +42,12 @@ class InfoImpl implements Trace.Info
 	public String getData() {
 		MyFragmentStatic mfs = (MyFragmentStatic) obj;
 		// Object	host_obj	= mf.getHost(); // Requires API 23
-		FldTextView fldtv = (FldTextView) mfs.getView();
-		String fldtv_class_at_hc = fldtv == null ? "<null>" : Trace.classAtHc(fldtv);
 		String tag = mfs.getTag();
 		if (tag == null) tag = "<null>";
 		String s = String.format(
-			"Id=%#x C@HC=%s Tg=%s Added=%b Attached=%b View=%s",
-			mfs.getId(), Trace.classAtHc(mfs),
-			tag, mfs.isAdded(), !mfs.isDetached(), fldtv_class_at_hc
+			"Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b View=%s",
+			tag, mfs.getId(), Trace.classAtHc(mfs), mfs.getRetainInstance(),
+			mfs.isAdded(), mfs.isDetached(), Trace.classAtHc(mfs.getView())
 		);
 		return s;
 	}

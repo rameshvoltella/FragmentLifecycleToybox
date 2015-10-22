@@ -251,17 +251,34 @@ public class FragmentPrintStates extends Fragment
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-	  MyFragment mf = (MyFragment) this;
-	  FldTextView fldtv = (FldTextView) mf.getView();
-	  String viewstr = fldtv == null
-		  ? "<null>" : Trace.classAtHc(fldtv);
-	  String msg = String.format(
-		  "Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b Vw=%s",
-		  mf.getMyTag(), mf.getId(), Trace.classAtHc(mf),
-		  mf.getRetainInstance(), mf.isAdded(), mf.isDetached(), viewstr
-	  );
+    // The class should be either MyFragment or MyFragmentStatic.
+    String tag = null;
+    int id     = 0;
+    try {
+      MyFragment mf = (MyFragment) this;
+      tag = mf.getMyTag();
+      id  = mf.getId();
+    }
+    catch (ClassCastException cce1) {
+      try {
+        MyFragmentStatic mf = (MyFragmentStatic) this;
+        tag = "<static fragment>";
+      }
+      catch (ClassCastException cce2) {
+        trace.log(label, "BAD CLASS: " + Trace.classAtHc(this));
+        return;
+      }
+    }
 
-	  trace.log(label, msg);
+    View v = this.getView();
+    String viewstr = v == null ? "<null>" : Trace.classAtHc(v);
+    String msg = String.format(
+        "Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b Vw=%s",
+        tag, id, Trace.classAtHc(this),
+        this.getRetainInstance(), this.isAdded(), this.isDetached(), viewstr
+    );
+
+    trace.log(label, msg);
   }
   //</editor-fold>
 }
