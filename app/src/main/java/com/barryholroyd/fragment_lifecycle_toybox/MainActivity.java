@@ -1,5 +1,6 @@
 package com.barryholroyd.fragment_lifecycle_toybox;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class MainActivity extends ActivityPrintStates
 
 	static final protected String FRAGTAG1 = "FragTag1";
 	static final protected String FRAGTAG2 = "FragTag2";
+	static final protected String FRAGTAG3 = "FragTag3"; // static fragment
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
@@ -321,7 +323,7 @@ public class MainActivity extends ActivityPrintStates
 		return FragmentIdSet.newInstanceFromButtonsetRid(buttonset_rid).getFragmentNumber();
 	}
 //</editor-fold>
-
+	//<editor-fold desc="METHODS: PRINT STATE">
 	public void printState() {
 		Trace.psLog(0, "[PRINT STATE START]");
 		printFragmentManagers(1);
@@ -333,7 +335,7 @@ public class MainActivity extends ActivityPrintStates
 		Trace.psLog(icnt, "FragmentManagers");
 		icnt++;
 		Trace.psLog(icnt, String.format("Transient  FMs: %s", MainActivity.getTransientMfs()));
-		Trace.psLog(icnt, String.format("Persistent MFs: %s", MainActivity.getFragmentManagerMfs()));
+		Trace.psLog(icnt, String.format("Persistent FMs: %s", MainActivity.getFragmentManagerMfs()));
 	}
 	private void printFragments(int icnt) {
 		Trace.psLog(icnt, "Fragments");
@@ -350,7 +352,6 @@ public class MainActivity extends ActivityPrintStates
 		}
 		Trace.printViewGroupHierarchy(icnt, vg);
 	}
-
 	private void printFragmentInfo(int icnt, int fno) {
 		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
 		MyFragment mf = getMyFragment(fid_set, false, true);
@@ -359,8 +360,7 @@ public class MainActivity extends ActivityPrintStates
 			Trace.psLog(icnt, s);
 		}
 	}
-
-
+	//</editor-fold>
 	//<editor-fold desc="METHODS: GET MY FRAGMENT">
 	private MyFragment getMyFragmentWrapper(View v) {
 		// Handled the case where the fragment doesn't exist yet and isn't created.
@@ -443,23 +443,28 @@ public class MainActivity extends ActivityPrintStates
 		return s == null ? "" : s;
 	}
 	static public String getFragmentManagerMfs() {
+		// Unfortunately, we have to hardcode the list of fragments we are looking for.
+		// Not sure how to probe the FragmentManager for the complete list of Fragments is has.
 		StringBuffer sb = new StringBuffer();
 		getFragmentManagerMf(sb, 1);
 		getFragmentManagerMf(sb, 2);
+		getFragmentManagerMf(sb, FRAGTAG3);
 		return sb.toString();
 	}
 	static private void getFragmentManagerMf(StringBuffer sb, int fno) {
 		FragmentIdSet fid_set = FragmentIdSet.newInstanceFromFragmentNumber(fno);
-		MyFragment mf = (MyFragment) fm.findFragmentByTag(fid_set.getFragmentTag());
-		if (mf != null){
+		getFragmentManagerMf(sb,fid_set.getFragmentTag());
+	}
+	static private void getFragmentManagerMf(StringBuffer sb, String tag) {
+		Fragment f = fm.findFragmentByTag(tag);
+		if (f != null){
 			if (sb.length() > 0)
 				sb.append(", ");
-			sb.append(String.format("%s=%#x", fid_set.getFragmentTag(), mf.hashCode()));
+			sb.append(String.format("%s=%#x", tag, f.hashCode()));
 		}
 	}
 	//</editor-fold>
 }
-
 //<editor-fold desc="CLASS: FragmentIdSet">
 class FragmentIdSet
 {

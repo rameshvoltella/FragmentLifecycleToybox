@@ -153,7 +153,8 @@ public class FragmentPrintStates extends Fragment
   // This method was deprecated in API level 23. Use onInflate(Context, AttributeSet, Bundle) instead.
   @Override
   public void onInflate(Activity activity, AttributeSet attrs, Bundle savedInstanceState) {
-    runme("onInflate()");
+    // Fragment's onInflate() just calls the onInflate() method just above.
+//    runme("onInflate()");
     super.onInflate(activity, attrs, savedInstanceState);
   }
   

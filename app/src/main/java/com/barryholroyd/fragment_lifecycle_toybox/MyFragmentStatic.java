@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class MyFragmentStatic extends FragmentPrintStates
 {
 	InfoImpl  info  = new InfoImpl(this);
-	private Trace trace = new Trace(Trace.LOGTAG_FRAGLC_STAT, Trace.SEP_FRAGMENT, info);
+	private Trace trace = new Trace(Trace.LOGTAG_FRAG_STAT, Trace.SEP_FRAGMENT, info);
 	//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 
 	public MyFragmentStatic() {

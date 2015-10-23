@@ -13,17 +13,14 @@ import android.widget.TextView;
 
 class Trace {
 	//<editor-fold desc="FIELDS">
-	static final public String LOGTAG_APPLC         = "FLD APP LC      ";
-	static final public String LOGTAG_APP           = "FLD APP         ";
-	static final public String LOGTAG_FRAGLC        = "FLD FRAG LC     ";    // tmp
-	static final public String LOGTAG_FRAGLC_STAT   = "FLD FRAG LC STAT";
-	static final public String LOGTAG_FRAGLC_DYN    = "FLD FRAG LC DYN ";
-	static final public String LOGTAG_FRAG          = "FLD FRAG        ";    // tmp
-	static final public String LOGTAG_FRAG_STAT     = "FLD FRAG STAT   ";
-	static final public String LOGTAG_FRAG_DYN      = "FLD FRAG DYN    ";
-	static final public String LOGTAG_VIEWGROUP     = "FLD VWGRP       ";
-	static final public String LOGTAG_VIEW          = "FLD VIEW        ";
-	static final public String LOGTAG_PRINT_STATE   = "FLD PRINT STATE ";
+	static final public String LOGTAG_APPLC       = "FLD APP LC      ";
+	static final public String LOGTAG_APP         = "FLD APP         ";
+	static final public String LOGTAG_FRAGLC      = "FLD FRAG LC     ";
+	static final public String LOGTAG_FRAG_STAT   = "FLD FRAG LC STAT";
+	static final public String LOGTAG_FRAG_DYN    = "FLD FRAG DYN    ";
+	static final public String LOGTAG_VIEWGROUP   = "FLD VWGRP       ";
+	static final public String LOGTAG_VIEW        = "FLD VIEW        ";
+	static final public String LOGTAG_PRINT_STATE = "FLD PRINT STATE ";
 
 	static final public String SEP_APPLC		= "|";
 	static final public String SEP_APP		    = "|";
