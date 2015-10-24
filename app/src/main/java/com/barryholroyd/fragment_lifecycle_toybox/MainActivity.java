@@ -76,6 +76,17 @@ public class MainActivity extends ActivityPrintStates
 			trace_layout_and_measure, R.id.button_toggle_lamt);
 		setButtonLabelRetainInstanceBlank("4. onCreate()", 1);
 		setButtonLabelRetainInstanceBlank("5. onCreate()", 2);
+		disableStaticFragmentButtons();
+	}
+	private void disableStaticFragmentButtons() {
+		// TBD: handle the case where the static fragment is commented out.
+		ViewGroup vg = (ViewGroup) findViewById(R.id.buttonset3);
+		disableStaticFragmentButton(vg, R.id.button_create);
+	}
+	private void disableStaticFragmentButton(ViewGroup vg, int rid) {
+		Button b = (Button) vg.findViewById(rid);
+		b.setEnabled(false);
+		b.setText("<static>");
 	}
 	//</editor-fold>
 	//<editor-fold desc="BUTTONS">
@@ -344,7 +355,7 @@ public class MainActivity extends ActivityPrintStates
 		printFragmentInfo(icnt, 2);
 	}
 	private void printViewGroupHierarchy(int icnt) {
-		int cid = R.id.container1;
+		int cid = R.id.container_top;
 		ViewGroup vg = (ViewGroup) findViewById(cid);
 		if (vg == null) {
 			String msg = String.format("No container for id: %#x!", cid);
@@ -497,13 +508,15 @@ class FragmentIdSet
 		switch (brid) {
 			case R.id.buttonset1: return makeFragmentIdSet(1);
 			case R.id.buttonset2: return makeFragmentIdSet(2);
+			case R.id.buttonset3: return makeFragmentIdSet(3);
 			default:              throw new IllegalStateException("Bad button set rid: " + brid);
 		}
 	}
 	static FragmentIdSet newInstanceFromContainerRid(int crid) {
 		switch (crid) {
-			case R.id.container2: return makeFragmentIdSet(1);
-			case R.id.container3: return makeFragmentIdSet(2);
+			case R.id.container1: return makeFragmentIdSet(1);
+			case R.id.container2: return makeFragmentIdSet(2);
+			case R.id.container3: return makeFragmentIdSet(3);
 			default:              throw new IllegalStateException("Bad container rid: " + crid);
 		}
 	}
@@ -511,13 +524,15 @@ class FragmentIdSet
 		switch (tag) {
 			case MainActivity.FRAGTAG1:  return makeFragmentIdSet(1);
 			case MainActivity.FRAGTAG2:  return makeFragmentIdSet(2);
+			case MainActivity.FRAGTAG3:  return makeFragmentIdSet(3);
 			default: throw new IllegalStateException("Bad fragment tag: " + tag);
 		}
 	}
 	static private FragmentIdSet makeFragmentIdSet(int fno) {
 		switch (fno) {
-			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container2, MainActivity.FRAGTAG1);
-			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container3, MainActivity.FRAGTAG2);
+			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG1);
+			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG2);
+			case 3:  return new FragmentIdSet(3, R.id.buttonset3, R.id.container3, MainActivity.FRAGTAG3);
 			default: throw new IllegalStateException("Bad fragment number: " + fno);
 		}
 	}
