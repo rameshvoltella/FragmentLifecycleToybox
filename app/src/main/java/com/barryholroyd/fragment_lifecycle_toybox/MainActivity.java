@@ -17,7 +17,7 @@ import java.util.Set;
 /*
  * Application Notes
  *   o Rotating the device will cause the log pane to lose its previous text. This could be
- *     managed by use ove onSaveInstanceState(), but that isn't really critical.
+ *     managed by use of onSaveInstanceState(), but that isn't really critical.
  *   o Grep for "FLD" to see relevant log entries from this app. E.g.:
  *     $ adb logcat -v time | grep FLD
  */
