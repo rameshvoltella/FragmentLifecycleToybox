@@ -1,9 +1,8 @@
-package com.barryholroyd.fragment_lifecycle_toybox;
+package com.barryholroyd.fragmentlifecycletoybox;
 
 import android.content.Context;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 
 /**

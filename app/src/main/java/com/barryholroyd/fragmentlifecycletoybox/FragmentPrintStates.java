@@ -1,4 +1,4 @@
-package com.barryholroyd.fragment_lifecycle_toybox;
+package com.barryholroyd.fragmentlifecycletoybox;
 
 import android.animation.Animator;
 import android.app.Activity;
