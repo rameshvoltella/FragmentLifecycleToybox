@@ -17,22 +17,21 @@ public class MyFragmentStatic extends MyFragment
 	public MyFragmentStatic() {
 		trace.log("MyFragmentStatic()", String.format("MyFragmentStatic(NEW)=%s",
 			Trace.classAtHc(this)));
-		// DEL: Trace.logMfs(this);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// For static fragments, the container is always null at this point (verify).
+		trace.log("onCreateView() 1", "Creating new View");
 		FldTextView statictv = (FldTextView) inflater.inflate(R.layout.static_textview, null, false);
-		trace.log("onCreateView()", String.format("MyFragmentStatic: statictv=%s, container=%s",
+		trace.log("onCreateView() 2", String.format("MyFragmentStatic: statictv=%s, container=%s",
 			Trace.classAtHc(statictv), Trace.classAtHc(container)));
+		// For static fragments, the container is always null at this point (verify).
 		return statictv;
 	}
 
 	public String getData() { return info.getData(); }
 	public String getMyTag() { return MainActivity.FRAGTAG_S1; }
-//	public int getContainerId() { return R.id.my_fragment_static; } // DEL:
-	public int getContainerId() { return R.id.container3; }
+	public int getContainerId() { return MainActivity.FRAGCONTAINER_S1; }
 	public class InfoImpl implements Trace.Info
 	{
 		// "this", from the object that created this instance

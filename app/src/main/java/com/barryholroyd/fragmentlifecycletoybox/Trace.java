@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 /**
  * Created by Barry on 10/13/2015.
+ *
+ * It appears that running most FragmentTransaction methods on static fragments
+ *   is not really supported. They generally seem to work as expected, but there
+ *   are exceptions.
  */
 
 class Trace {
@@ -181,9 +185,4 @@ class Trace {
 		bh.log(msg);
 	}
 	//</editor-fold>
-
-	// DEL:
-//	public void logMfs(MyFragment mf) {
-//		View
-//	}
 }

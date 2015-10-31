@@ -31,7 +31,7 @@ public class MainActivity extends ActivityPrintStates
 	// "Transient Fragment Manager"
 	// This isn't an actual Android FragmentManager. It tracks fragments which exist
 	//   but which are *not* in the actual FragmentManager.
-	static private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
+	private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
 
 	static final protected String FRAGTAG_D1 = "FragTagDynamic1";
 	static final protected String FRAGTAG_D2 = "FragTagDynamic2";
@@ -81,6 +81,7 @@ public class MainActivity extends ActivityPrintStates
 			trace_layout_and_measure, R.id.button_toggle_lamt);
 		setButtonLabelRetainInstanceBlank("4. onCreate()", 1);
 		setButtonLabelRetainInstanceBlank("5. onCreate()", 2);
+		setButtonLabelRetainInstanceBlank("5. onCreate()", 3);
 		disableStaticFragmentButtons();
 	}
 	private void disableStaticFragmentButtons() {
@@ -260,14 +261,23 @@ public class MainActivity extends ActivityPrintStates
 		 * Attach: Re-attach a fragment after it had previously been detached from the UI with detach(Fragment).
 		 *         This causes its view hierarchy to be re-created, attached to the UI, and displayed.
 		 */
+
+		/*
+		 * STATIC FRAGMENTS
+		 * I experimented with running FragmentTransaction methods on static
+		 * fragments, to see what would happen. Predictably, it is unpredictable.
+		 * Some things work and some things don't. That scenario appears to be
+		 * not well tested and fairly buggy, most likely because FragmentTransactions
+		 * were never intended to be used with static fragments (I believe that's the
+		 * case, although I haven't fully verified it).
+		 *
+		 * The bottom line is:
+		 *  FRAGMENT TRANSACTIONS SHOULD PROBABLY NOT BE USED ON STATIC FRAGMENTS.
+		 */
 		FragmentTransaction ft = fm.beginTransaction();
 		String ftag = mf.getMyTag();
 		int cid = mf.getContainerId();
 
-		/*
-		 * Note: the static fragment will always be in FragmentManager; it will
-		 *   never be stored in the "Transient Storage Manager" (transientMyFragments).
-		 */
 		switch(cmd) {
 			case ADD_WITHOUT_VIEW:
 				trace.logCode("ft.add(mf, ftag);");
@@ -277,6 +287,12 @@ public class MainActivity extends ActivityPrintStates
 				transientMyFragments.remove(ftag);
 				break;
 			case ADD_WITH_VIEW:
+				if (isStaticContainerFragment(cid)) {
+					trace.logCode(
+						"Skipping ft.add(cid, mf, ftag) for static fragment " +
+						"\nto avoid putting it into a bad state.");
+					return;
+				}
 				trace.logCode("ft.add(cid, mf, ftag);");
 				if (fragmentInFragmentManager(ftag, label))
 					return;
@@ -334,9 +350,12 @@ public class MainActivity extends ActivityPrintStates
 		ft.commit();
 		fm.executePendingTransactions();
 	}
-
 	private boolean isStaticContainerFragment(int cid) {
 		/*
+		 * FragmentTransaction methods should probably not be called on static
+		 * fragments. At least two problems can occur.
+		 *
+		 * REPLACE()
 		 * Most likely ft.replace() should not be called on a static fragment.
 		 * Still, it should minimally throw an appropriate exception or, even better,
 		 * simply do the replace (most of the other functions here work on static
@@ -359,8 +378,30 @@ public class MainActivity extends ActivityPrintStates
 		 *   the ViewGroup.
 		 *
 		 * So we check for this condition, to work around the bug.
+		 *
+		 * ADD (with a view)
+		 * If a fragment is removed from the FragmentManager (which we check for
+		 * before running ft.add() on it), and then added via ft.add(cid, mf, ftag),
+		 * so that its View is put into a container, the fragment seems to end up
+		 * in a weird state. More specifically, if the device is then rotated the
+		 * static fragment will get recreated out of the XML file, as it should,
+		 * but its onCreateView() method will not be called. Soon after, when the
+		 * view hierarchy is getting laid out, the system will throw the following
+		 * exception.
+		 *
+		 * 	java.lang.IllegalStateException: Fragment
+         *    com.barryholroyd.fragmentlifecycletoybox.MyFragmentStatic
+         *    did not create a view.
+		 *
+		 * Since it is in the FragmentManager, the FM knows about it and probably
+		 * intends to recreate a new "dynamic" instance of it. Somehow that seems
+		 * to interfere with the creation of the fragment as a static fragment --
+		 * specifically, by preventing it onCreateView() method from being called.
+		 *
+		 * In our code here, we disallow the running of ftadd(cid, mf, ftag) on the
+		 * static fragment.
 		 */
-		 return cid == R.id.container3;
+		 return cid == FRAGCONTAINER_S1;
 	}
 	private boolean fragmentInFragmentManager(String ftag, String label) {
 		if (fm.findFragmentByTag(ftag) != null) {
@@ -380,12 +421,6 @@ public class MainActivity extends ActivityPrintStates
 	//<editor-fold desc="METHODS: PRINT STATE">
 	public void printState() {
 		Trace.psLog(0, "[PRINT STATE START]");
-		Trace.psLog(0,
-			String.format("::: R.id.container3: %#x, %d",
-				R.id.container3, R.id.container3));
-		Trace.psLog(0,
-			String.format("::: R.id.my_fragment_static: %#x, %d",
-				R.id.my_fragment_static, R.id.my_fragment_static));
 		printFragmentManagers(1);
 		printFragments(1);
 		printViewGroupHierarchy(1);
@@ -394,7 +429,7 @@ public class MainActivity extends ActivityPrintStates
 	private void printFragmentManagers(int icnt) {
 		Trace.psLog(icnt, "FragmentManagers");
 		icnt++;
-		Trace.psLog(icnt, String.format("Transient  FMs: %s", MainActivity.getTransientMfs()));
+		Trace.psLog(icnt, String.format("Transient  FMs: %s", getTransientMfs()));
 		Trace.psLog(icnt, String.format("Persistent FMs: %s", MainActivity.getFragmentManagerMfs()));
 	}
 	private void printFragments(int icnt) {
@@ -495,7 +530,7 @@ public class MainActivity extends ActivityPrintStates
 		if (!silent)
 			trace.log(label, msg);
 	}
-	static public String getTransientMfs() {
+	public String getTransientMfs() {
 		Set keys = transientMyFragments.keySet();
 		Iterator<String> iter = keys.iterator();
 		String s = "";
@@ -568,10 +603,10 @@ class FragmentIdSet
 	}
 	static FragmentIdSet newInstanceFromContainerRid(int crid) {
 		switch (crid) {
-			case R.id.container1: return makeFragmentIdSet(1);
-			case R.id.container2: return makeFragmentIdSet(2);
-			case R.id.container3: return makeFragmentIdSet(3);
-			default:              throw new IllegalStateException("Bad container rid: " + crid);
+			case MainActivity.FRAGCONTAINER_D1: return makeFragmentIdSet(1);
+			case MainActivity.FRAGCONTAINER_D2: return makeFragmentIdSet(2);
+			case MainActivity.FRAGCONTAINER_S1: return makeFragmentIdSet(3);
+			default: throw new IllegalStateException("Bad container rid: " + crid);
 		}
 	}
 	static FragmentIdSet newInstanceFromFragmentTag(String tag) {
@@ -584,9 +619,12 @@ class FragmentIdSet
 	}
 	static private FragmentIdSet makeFragmentIdSet(int fno) {
 		switch (fno) {
-			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG_D1);
-			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG_D2);
-			case 3:  return new FragmentIdSet(3, R.id.buttonset3, R.id.container3, MainActivity.FRAGTAG_S1);
+			case 1:  return new FragmentIdSet(1,
+				R.id.buttonset1, MainActivity.FRAGCONTAINER_D1, MainActivity.FRAGTAG_D1);
+			case 2:  return new FragmentIdSet(2,
+				R.id.buttonset2, MainActivity.FRAGCONTAINER_D2, MainActivity.FRAGTAG_D2);
+			case 3:  return new FragmentIdSet(3,
+				R.id.buttonset3, MainActivity.FRAGCONTAINER_S1, MainActivity.FRAGTAG_S1);
 			default: throw new IllegalStateException("Bad fragment number: " + fno);
 		}
 	}
