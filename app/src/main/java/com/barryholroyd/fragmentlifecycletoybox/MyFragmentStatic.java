@@ -17,6 +17,7 @@ public class MyFragmentStatic extends MyFragment
 	public MyFragmentStatic() {
 		trace.log("MyFragmentStatic()", String.format("MyFragmentStatic(NEW)=%s",
 			Trace.classAtHc(this)));
+		// DEL: Trace.logMfs(this);
 	}
 
 	@Override
@@ -30,6 +31,7 @@ public class MyFragmentStatic extends MyFragment
 
 	public String getData() { return info.getData(); }
 	public String getMyTag() { return MainActivity.FRAGTAG_S1; }
+//	public int getContainerId() { return R.id.my_fragment_static; } // DEL:
 	public int getContainerId() { return R.id.container3; }
 	public class InfoImpl implements Trace.Info
 	{

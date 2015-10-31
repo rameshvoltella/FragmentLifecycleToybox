@@ -181,4 +181,9 @@ class Trace {
 		bh.log(msg);
 	}
 	//</editor-fold>
+
+	// DEL:
+//	public void logMfs(MyFragment mf) {
+//		View
+//	}
 }

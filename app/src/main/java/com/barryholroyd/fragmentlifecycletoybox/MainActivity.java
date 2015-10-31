@@ -27,18 +27,19 @@ public class MainActivity extends ActivityPrintStates
 {
 	//<editor-fold desc="FIELDS">
 	private Trace trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, null);
-	//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, null);
 
 	// "Transient Fragment Manager"
 	// This isn't an actual Android FragmentManager. It tracks fragments which exist
 	//   but which are *not* in the actual FragmentManager.
-	// Note that the static fragment is never stored here. As long as it exists, it will be
-	//   tracked by the FragmentManager. TBD: CHECK THIS. Depends on whether ft.remove() works on statics or not.
 	static private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
 
 	static final protected String FRAGTAG_D1 = "FragTagDynamic1";
 	static final protected String FRAGTAG_D2 = "FragTagDynamic2";
 	static final protected String FRAGTAG_S1 = "FragTagStatic1"; // static fragment
+
+	static final protected int FRAGCONTAINER_D1 = R.id.container1;
+	static final protected int FRAGCONTAINER_D2 = R.id.container2;
+	static final protected int FRAGCONTAINER_S1 = R.id.container3;
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
@@ -83,7 +84,6 @@ public class MainActivity extends ActivityPrintStates
 		disableStaticFragmentButtons();
 	}
 	private void disableStaticFragmentButtons() {
-		// TBD: handle the case where the static fragment is commented out.
 		ViewGroup vg = (ViewGroup) findViewById(R.id.buttonset3);
 		disableStaticFragmentButton(vg, R.id.button_create);
 	}
@@ -289,15 +289,16 @@ public class MainActivity extends ActivityPrintStates
 				transientMyFragments.put(ftag, mf);
 				break;
 			case REPLACE:
-				// TBD: is this working?
 				trace.logCode("ft.replace(cid, mf, ftag);");
+				if (isStaticContainerFragment(cid))
+				  return;
 				ft.replace(cid, mf, ftag);
 				transientMyFragments.remove(ftag);
 				break;
 			case DETACH:
 				/*
 				 * There appears to be a bug in ft.detach() code. It allows you to detach
-				 *   (isDatch() will return true) even if you haven't yet been added to
+				 *   (isDetach() will return true) even if you haven't yet been added to
 				 *   the FragmentManager (e.g., via ft.add()). If you subsequentl call
 				 *   ft.attach(), it will (under the covers) then run ft.add(), silently
 				 *   adding you to the FragmentManager. However, it will do so without
@@ -333,6 +334,34 @@ public class MainActivity extends ActivityPrintStates
 		ft.commit();
 		fm.executePendingTransactions();
 	}
+
+	private boolean isStaticContainerFragment(int cid) {
+		/*
+		 * Most likely ft.replace() should not be called on a static fragment.
+		 * Still, it should minimally throw an appropriate exception or, even better,
+		 * simply do the replace (most of the other functions here work on static
+		 * fragments).
+		 *
+		 * Instead, there seems to be a bug in ft.replace().
+		 *
+		 *   o The container id (cid) value (in the current compile) is 2131492976.
+		 *   o 2131492976 is the parent ViewGroup of the <fragment>.
+		 *   o 2131492977 is the View that has replaced the <fragment> tag
+		 *
+		 * This should be fine -- the cid represents the correct container for the
+		 * fragment. However, it throws the following exception:
+		 *
+		 *  java.lang.IllegalStateException: Can't change container ID of fragment
+		 *    MyFragmentStatic{38a9c6c2 #0 id=0x7f0c0071 FragTagStatic1}:
+		 *    was 2131492977 now 2131492976
+		 *
+		 * It appears that replace() mistakenly believes that the View is actually
+		 *   the ViewGroup.
+		 *
+		 * So we check for this condition, to work around the bug.
+		 */
+		 return cid == R.id.container3;
+	}
 	private boolean fragmentInFragmentManager(String ftag, String label) {
 		if (fm.findFragmentByTag(ftag) != null) {
 			if (label != null) {
@@ -351,6 +380,12 @@ public class MainActivity extends ActivityPrintStates
 	//<editor-fold desc="METHODS: PRINT STATE">
 	public void printState() {
 		Trace.psLog(0, "[PRINT STATE START]");
+		Trace.psLog(0,
+			String.format("::: R.id.container3: %#x, %d",
+				R.id.container3, R.id.container3));
+		Trace.psLog(0,
+			String.format("::: R.id.my_fragment_static: %#x, %d",
+				R.id.my_fragment_static, R.id.my_fragment_static));
 		printFragmentManagers(1);
 		printFragments(1);
 		printViewGroupHierarchy(1);
