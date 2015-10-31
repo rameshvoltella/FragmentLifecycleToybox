@@ -29,12 +29,16 @@ public class MainActivity extends ActivityPrintStates
 	private Trace trace = new Trace(Trace.LOGTAG_APP, Trace.SEP_APP, null);
 	//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, null);
 
-	// Transient storage for MyFragments, to track when they aren't in the FragmentManager.
+	// "Transient Fragment Manager"
+	// This isn't an actual Android FragmentManager. It tracks fragments which exist
+	//   but which are *not* in the actual FragmentManager.
+	// Note that the static fragment is never stored here. As long as it exists, it will be
+	//   tracked by the FragmentManager. TBD: CHECK THIS. Depends on whether ft.remove() works on statics or not.
 	static private HashMap<String,MyFragment> transientMyFragments = new HashMap<>();
 
-	static final protected String FRAGTAG1 = "FragTag1";
-	static final protected String FRAGTAG2 = "FragTag2";
-	static final protected String FRAGTAG3 = "FragTag3"; // static fragment
+	static final protected String FRAGTAG_D1 = "FragTagDynamic1";
+	static final protected String FRAGTAG_D2 = "FragTagDynamic2";
+	static final protected String FRAGTAG_S1 = "FragTagStatic1"; // static fragment
 
 	// Tracing onLayout() and onMeasure() introduces a lot of extra tracing.
 	static public boolean trace_layout_and_measure = false;
@@ -169,15 +173,19 @@ public class MainActivity extends ActivityPrintStates
 		printState();
 	}
 	public void buttonReset(View v) {
-		trace.log("Resetting (fully destroying all fragments).");
-		destroyFragment(FRAGTAG1);
-		destroyFragment(FRAGTAG2);
+		trace.log("Resetting (fully destroying all *dynamic* fragments).");
+		destroyFragment(FRAGTAG_D1);
+		destroyFragment(FRAGTAG_D2);
+		// Retain the static fragment since it can't be re-created.
+		MyFragment mf = transientMyFragments.get(FRAGTAG_S1);
 		transientMyFragments.clear();
+		if (mf != null)
+			transientMyFragments.put(FRAGTAG_S1, mf);
 	}
 	private void destroyFragment(String ftag) {
 		FragmentManager fm = getFragmentManager();
-		MyFragment mf = (MyFragment) fm.findFragmentByTag(ftag);
-		if (mf == null)
+		MyFragment mf = (MyFragmentDynamic) fm.findFragmentByTag(ftag);
+		if (mf == null || mf.getMyTag().equals(FRAGTAG_S1))
 			return;
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.remove(mf);
@@ -256,6 +264,10 @@ public class MainActivity extends ActivityPrintStates
 		String ftag = mf.getMyTag();
 		int cid = mf.getContainerId();
 
+		/*
+		 * Note: the static fragment will always be in FragmentManager; it will
+		 *   never be stored in the "Transient Storage Manager" (transientMyFragments).
+		 */
 		switch(cmd) {
 			case ADD_WITHOUT_VIEW:
 				trace.logCode("ft.add(mf, ftag);");
@@ -272,13 +284,15 @@ public class MainActivity extends ActivityPrintStates
 				transientMyFragments.remove(ftag);
 				break;
 			case REMOVE:
+				trace.logCode("ft.remove(mf);");
 				ft.remove(mf);
 				transientMyFragments.put(ftag, mf);
-				trace.logCode("ft.remove(mf);");
 				break;
 			case REPLACE:
-				ft.replace(cid, mf, ftag);
+				// TBD: is this working?
 				trace.logCode("ft.replace(cid, mf, ftag);");
+				ft.replace(cid, mf, ftag);
+				transientMyFragments.remove(ftag);
 				break;
 			case DETACH:
 				/*
@@ -300,20 +314,20 @@ public class MainActivity extends ActivityPrintStates
 					trace.logCode("Skipping ft.detach(): not added yet.");
 					return;
 				}
-				ft.detach(mf);
 				trace.logCode("ft.detach(mf);");
+				ft.detach(mf);
 				break;
 			case ATTACH:
 				ft.attach(mf);
 				trace.logCode("ft.attach(mf);");
 				break;
 			case HIDE:
-				ft.hide(mf);
 				trace.logCode("ft.hide(mf);");
+				ft.hide(mf);
 				break;
 			case SHOW:
-				ft.show(mf);
 				trace.logCode("ft.show(mf);");
+				ft.show(mf);
 				break;
 		}
 		ft.commit();
@@ -353,6 +367,7 @@ public class MainActivity extends ActivityPrintStates
 		icnt++;
 		printFragmentInfo(icnt, 1);
 		printFragmentInfo(icnt, 2);
+		printFragmentInfo(icnt, 3);
 	}
 	private void printViewGroupHierarchy(int icnt) {
 		int cid = R.id.container_top;
@@ -399,6 +414,7 @@ public class MainActivity extends ActivityPrintStates
 		String ftag = fid_set.getFragmentTag();
 		MyFragment mf = transientMyFragments.get(ftag);
 		if (mf != null) {
+			// This will only happen for dynamic fragments.
 			gmfLog("getMyFragment()",
 				String.format(
 					"EXISTING fragment retrieved from transient storage: %s (%s).",
@@ -411,22 +427,25 @@ public class MainActivity extends ActivityPrintStates
 		mf = (MyFragment) fm.findFragmentByTag(ftag);
 		if (mf == null) {
 			if (create) {
-				mf = new MyFragment();
-				mf.init(ftag, fid_set.getContainerRid());
-				transientMyFragments.put(ftag, mf);
+				// Only create dynamic fragments (static fragments are only created in XML).
+				MyFragmentDynamic mfd = new MyFragmentDynamic();
+				mfd.init(ftag, fid_set.getContainerRid());
+				transientMyFragments.put(ftag, mfd);
 				gmfLog("getMyFragment()",
 					String.format(
 						"NEW fragment created: %s (%s) ",
-						mf.getMyTag(), Trace.classAtHc(mf)),
-				silent);
-				trace.logCode("mf = new MyFragment();");
+						mfd.getMyTag(), Trace.classAtHc(mfd)),
+					silent);
+				trace.logCode("mf = new MyFragmentDynamic();");
 
 				setButtonLabelRetainInstance(
-					"getMyFragment", fid_set.getFragmentNumber(), mf.getRetainInstance());
-
+					"getMyFragment", fid_set.getFragmentNumber(), mfd.getRetainInstance());
+				return mfd;
 			}
 			else
-				gmfLog("getMyFragment()", "No fragment yet.", silent);
+				gmfLog("getMyFragment()",
+					String.format("No such fragment in FragmentManager %s.", ftag),
+					silent);
 
 		} else
 			gmfLog("getMyFragment()",
@@ -459,7 +478,7 @@ public class MainActivity extends ActivityPrintStates
 		StringBuffer sb = new StringBuffer();
 		getFragmentManagerMf(sb, 1);
 		getFragmentManagerMf(sb, 2);
-		getFragmentManagerMf(sb, FRAGTAG3);
+		getFragmentManagerMf(sb, FRAGTAG_S1);
 		return sb.toString();
 	}
 	static private void getFragmentManagerMf(StringBuffer sb, int fno) {
@@ -522,17 +541,17 @@ class FragmentIdSet
 	}
 	static FragmentIdSet newInstanceFromFragmentTag(String tag) {
 		switch (tag) {
-			case MainActivity.FRAGTAG1:  return makeFragmentIdSet(1);
-			case MainActivity.FRAGTAG2:  return makeFragmentIdSet(2);
-			case MainActivity.FRAGTAG3:  return makeFragmentIdSet(3);
+			case MainActivity.FRAGTAG_D1:  return makeFragmentIdSet(1);
+			case MainActivity.FRAGTAG_D2:  return makeFragmentIdSet(2);
+			case MainActivity.FRAGTAG_S1:  return makeFragmentIdSet(3);
 			default: throw new IllegalStateException("Bad fragment tag: " + tag);
 		}
 	}
 	static private FragmentIdSet makeFragmentIdSet(int fno) {
 		switch (fno) {
-			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG1);
-			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG2);
-			case 3:  return new FragmentIdSet(3, R.id.buttonset3, R.id.container3, MainActivity.FRAGTAG3);
+			case 1:  return new FragmentIdSet(1, R.id.buttonset1, R.id.container1, MainActivity.FRAGTAG_D1);
+			case 2:  return new FragmentIdSet(2, R.id.buttonset2, R.id.container2, MainActivity.FRAGTAG_D2);
+			case 3:  return new FragmentIdSet(3, R.id.buttonset3, R.id.container3, MainActivity.FRAGTAG_S1);
 			default: throw new IllegalStateException("Bad fragment number: " + fno);
 		}
 	}

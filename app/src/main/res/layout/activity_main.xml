@@ -76,7 +76,7 @@
                     class="com.barryholroyd.fragmentlifecycletoybox.MyFragmentStatic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tag="FragTag3"
+                    android:tag="FragTagStatic1"
                     android:id="@+id/my_fragment_static"
                     >
                 </fragment>

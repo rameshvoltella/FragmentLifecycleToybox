@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <TextView
+    <com.barryholroyd.fragmentlifecycletoybox.FldTextView
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/SharedStyle.StaticTextViewStyle"
         android:id="@+id/static_textview"
-        android:text="Static TextView"
+        android:text="Static FldTextView"
     />

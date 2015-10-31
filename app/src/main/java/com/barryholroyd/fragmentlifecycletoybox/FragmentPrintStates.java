@@ -252,11 +252,11 @@ public class FragmentPrintStates extends Fragment
   //</editor-fold>
   //<editor-fold desc="SUPPORT METHODS">
   private void runme(String label) {
-    // The class should be either MyFragment or MyFragmentStatic.
+    // The class should be either MyFragmentDynamic or MyFragmentStatic.
     String tag = null;
     int id     = 0;
     try {
-      MyFragment mf = (MyFragment) this;
+      MyFragmentDynamic mf = (MyFragmentDynamic) this;
       tag = mf.getMyTag();
       id  = mf.getId();
     }
@@ -274,7 +274,7 @@ public class FragmentPrintStates extends Fragment
     View v = this.getView();
     String viewstr = v == null ? "<null>" : Trace.classAtHc(v);
     String msg = String.format(
-        "Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b Vw=%s",
+        "Tag=%s getId=%#x C@HC=%s Retained=%b isAdded=%b ExplicitlyDetached=%b View=%s",
         tag, id, Trace.classAtHc(this),
         this.getRetainInstance(), this.isAdded(), this.isDetached(), viewstr
     );

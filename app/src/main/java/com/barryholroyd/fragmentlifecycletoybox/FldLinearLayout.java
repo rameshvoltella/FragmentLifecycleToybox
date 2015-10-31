@@ -13,7 +13,6 @@ public class FldLinearLayout extends LinearLayout
 	//<editor-fold desc="FIELDS">
 	private InfoImpl  info  = new InfoImpl(this);
 	private Trace trace = new Trace(Trace.LOGTAG_VIEWGROUP, Trace.SEP_VIEWGROUP, info);
-//	DEL: private Trace tracePs = new Trace(Trace.LOGTAG_PRINT_STATE, Trace.SEP_PRINT_STATE, info);
 
 	//</editor-fold>
 	//<editor-fold desc="CONSTRUCTORS">
@@ -90,20 +89,6 @@ public class FldLinearLayout extends LinearLayout
 	}
 	//</editor-fold>
 	//<editor-fold desc="TRACE SUPPORT">
-//	public void fldLlTrace() { // TBD:
-////		DEL: tracePs.log("FldLinearLayout");
-//		traceChildren();
-//	}
-//	private void traceChildren() { // TBD:
-//		// Print container's children's info.
-//		int child_cnt = getChildCount();
-//		for (int i = 0 ; i < child_cnt ; i++) {
-//			// There should only be FldTextView children present.
-//			FldTextView fld_tv = (FldTextView) getChildAt(i);
-//			fld_tv.fldTvTrace();
-//		}
-//	}
-	// DEL: ?
 	class InfoImpl implements Trace.Info
 	{
 		// "this", from the object that created this instance
