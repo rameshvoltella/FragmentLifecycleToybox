@@ -265,11 +265,9 @@ public class MainActivity extends ActivityPrintStates
 		/*
 		 * STATIC FRAGMENTS
 		 * I experimented with running FragmentTransaction methods on static
-		 * fragments, to see what would happen. Predictably, it is unpredictable.
-		 * Some things work and some things don't. That scenario appears to be
-		 * not well tested and fairly buggy, most likely because FragmentTransactions
-		 * were never intended to be used with static fragments (I believe that's the
-		 * case, although I haven't fully verified it).
+		 * fragments, to see what would happen. That scenario appears to be
+		 * not well tested and fairly buggy, most likely because (I believe that)
+		 * FragmentTransactions were never intended to be used with static fragments.
 		 *
 		 * The bottom line is:
 		 *  FRAGMENT TRANSACTIONS SHOULD PROBABLY NOT BE USED ON STATIC FRAGMENTS.
